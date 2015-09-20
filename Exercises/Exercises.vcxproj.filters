@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{aab32e91-b95c-400c-892c-14b17a0da949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logics">
+      <UniqueIdentifier>{a9174d48-8dcb-426e-a9e3-26f0ac94c431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Descriptions">
+      <UniqueIdentifier>{6e687020-5ff1-4ec8-90e8-11284afce4c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logics\Persistance">
+      <UniqueIdentifier>{3d7519e3-c4fc-4fc9-9ad8-40f53701bb11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs">
+      <UniqueIdentifier>{45777485-3fb8-4ede-afcf-9f8fd9c206b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\46">
+      <UniqueIdentifier>{5dd11789-1e42-41c3-837b-9c8cbbe0cc76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\46\In">
+      <UniqueIdentifier>{6579e883-6394-4da9-8068-f0e942c9c02d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\46\Out">
+      <UniqueIdentifier>{adac7aa5-1885-4ff4-a1c8-9944edb6f5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\25">
+      <UniqueIdentifier>{d37e2e81-aa2c-44ef-9357-f1e125061e33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\25\In">
+      <UniqueIdentifier>{e1d204cb-38eb-41e5-9951-0f9a695e7296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\25\Out">
+      <UniqueIdentifier>{8cd58f26-ad38-4f56-966a-96a0eb3d73ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\52">
+      <UniqueIdentifier>{6f58c659-df4b-430c-98ea-849f782f3f70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\52\In">
+      <UniqueIdentifier>{34ada705-59c6-4f15-bfab-f38634cceabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\52\Out">
+      <UniqueIdentifier>{a2d7c114-f814-40c3-8735-48087e20e78d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Helpers\RunTimeTimer.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Logics\Logic.cpp">
+      <Filter>Logics</Filter>
+    </ClCompile>
+    <ClCompile Include="Logics\Persistance\IOHandler.cpp">
+      <Filter>Logics\Persistance</Filter>
+    </ClCompile>
+    <ClCompile Include="Logics\DataStruckFunctions.cpp">
+      <Filter>Logics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Helpers\RunTimeTimer.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Logics\Logic.h">
+      <Filter>Logics</Filter>
+    </ClInclude>
+    <ClInclude Include="Logics\Persistance\IOHandler.h">
+      <Filter>Logics\Persistance</Filter>
+    </ClInclude>
+    <ClInclude Include="Logics\DataStruckFunctions.h">
+      <Filter>Logics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Descriptions\46 Leírás.txt">
+      <Filter>Resource Files\Descriptions</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\In\INPUT00.TXT">
+      <Filter>Resource Files\In-Outputs\46\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\46\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\In\INPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\46\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\In\INPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\46\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\In\INPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\46\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\In\INPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\46\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\Out\OUTPUT00.TXT">
+      <Filter>Resource Files\In-Outputs\46\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\Out\OUTPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\46\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\Out\OUTPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\46\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\Out\OUTPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\46\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\Out\OUTPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\46\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\46\Out\OUTPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\46\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT00.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT01.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT02.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT03.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT04.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT05.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\In\INPUT06.txt">
+      <Filter>Resource Files\In-Outputs\25\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT00.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT01.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT02.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT03.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT04.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT05.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\25\Out\OUTPUT06.txt">
+      <Filter>Resource Files\In-Outputs\25\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\52\In\INPUT00.TXT">
+      <Filter>Resource Files\In-Outputs\52\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\52\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\52\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\52\Out\OUTPUT00.TXT">
+      <Filter>Resource Files\In-Outputs\52\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\52\Out\OUTPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\52\Out</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
