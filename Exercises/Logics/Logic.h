@@ -8,6 +8,15 @@
 #include <list>
 #include <set>
 
+/*class CompareDist
+{
+public:
+	bool operator()(std::pair< int, int > firstPair, std::pair< int, int > secundPair)
+	{
+		return firstPair.first > secundPair.first;
+	}
+};*/
+
 class Logic
 {
 public:

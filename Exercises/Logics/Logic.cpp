@@ -1,7 +1,10 @@
 #include "Logic.h"
 
+#include "DataStruckFunctions.h"
+
 #include <sstream>
 #include <limits>
+//#include <queue>
 
 Logic::Logic(const std::string &rootDirectory) : 
 	ExerciseIOHandler(rootDirectory)
@@ -310,21 +313,29 @@ void Logic::generateResult52_Setup(int &vertexCount, std::map< int, std::vector<
 
 void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
 {
+	DataStruckFunctions dataStruckFunctions;
+
 	int intMaximumValue = std::numeric_limits<int>::max();
 
 	std::vector< int > pathWeightVector(vertexCount, 0);
 	std::vector< int > parentVertexVector(vertexCount, -1);
 	std::set< std::pair< int, int > > pileVertexesSet;
+	//std::vector< std::pair< int, int* > > vertexesPile;
 	std::set< int > finishedVertex;
 
 	pathWeightVector[0] = 0;
 	pileVertexesSet.insert(std::make_pair(0, 0));
+	//vertexesPile.push_back(std::make_pair(0, &pathWeightVector[0]));
 
 	while (!pileVertexesSet.empty())
+	//while (!vertexesPile.empty())
 	{
 		 int pathLastVertex = pileVertexesSet.begin()->first;
+		 //int pathLastVertex = vertexesPile.back().first;
 		 int pathLastVertexWeight = pileVertexesSet.begin()->second;
+		 //int pathLastVertexWeight = *vertexesPile.back().second;
 		 pileVertexesSet.erase(pileVertexesSet.begin());
+		 //vertexesPile.pop_back();
 		 finishedVertex.insert(pathLastVertex);
 
 		 const std::vector< std::pair< int, int > > &tmpVertexWeightPairVector = processData[pathLastVertex];
@@ -338,8 +349,13 @@ void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vec
 				 if (newWeight > pathWeightVector[edge])
 				 {
 					 pileVertexesSet.erase(std::make_pair(edge, pathWeightVector[edge]));
+					 /*if (newWeight != 0 && finishedVertex.find(edge) == finishedVertex.end())
+					 {
+						 vertexesPile.push_back(std::make_pair(edge, &pathWeightVector[edge]));
+					 }*/
 					 pathWeightVector[edge] = newWeight;
 					 parentVertexVector[edge] = pathLastVertex;
+					 //dataStruckFunctions.PileOrdering(vertexesPile);
 					 pileVertexesSet.insert(std::make_pair(edge, pathWeightVector[edge]));
 				 }
 			 }
