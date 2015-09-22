@@ -146,14 +146,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Logics\DataStruckFunctions.cpp" />
     <ClCompile Include="Helpers\RunTimeTimer.cpp" />
     <ClCompile Include="Logics\Logic.cpp" />
     <ClCompile Include="Logics\Persistance\IOHandler.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Logics\DataStruckFunctions.h" />
     <ClInclude Include="Helpers\RunTimeTimer.h" />
     <ClInclude Include="Logics\Logic.h" />
     <ClInclude Include="Logics\Persistance\IOHandler.h" />

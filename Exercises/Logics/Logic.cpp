@@ -1,10 +1,9 @@
 #include "Logic.h"
 
-#include "DataStruckFunctions.h"
+//#include "DataStruckFunctions.h"
 
 #include <sstream>
 #include <limits>
-//#include <queue>
 
 Logic::Logic(const std::string &rootDirectory) : 
 	ExerciseIOHandler(rootDirectory)
@@ -44,6 +43,14 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 		while (ExerciseIOHandler.openNext())
 		{
 			generateResult52();
+			ExerciseIOHandler.close();
+		}
+
+		break;
+	case 70:
+		while (ExerciseIOHandler.openNext())
+		{
+			generateResult70();
 			ExerciseIOHandler.close();
 		}
 
@@ -313,7 +320,7 @@ void Logic::generateResult52_Setup(int &vertexCount, std::map< int, std::vector<
 
 void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
 {
-	DataStruckFunctions dataStruckFunctions;
+	//DataStruckFunctions dataStruckFunctions;
 
 	int intMaximumValue = std::numeric_limits<int>::max();
 
@@ -383,4 +390,98 @@ void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vec
 	}
 
 	ExerciseIOHandler << std::endl;
+}
+
+void Logic::generateResult70()
+{
+	int startPoint;
+	int endPoint;
+
+	std::vector< std::pair< int, int > > inOutPathOfPoints;
+
+	std::map< int, std::vector< int > > tourMap;
+
+	generateResult70_Setup(startPoint, endPoint, inOutPathOfPoints, tourMap);
+
+	generateResult70_Calculate(startPoint, endPoint, inOutPathOfPoints, tourMap);
+}
+
+void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< std::pair< int, int > > &inOutPathOfPoints, std::map< int, std::vector< int > > &tourMap)
+{
+	int pointsCount;
+	int pathsCount;
+
+	ExerciseIOHandler >> pointsCount;
+	ExerciseIOHandler >> pathsCount;
+	ExerciseIOHandler >> startPoint;
+	ExerciseIOHandler >> endPoint;
+
+	--startPoint;
+	--endPoint;
+
+	inOutPathOfPoints.resize(pointsCount, std::make_pair(0, 0));
+
+	for (int i = 0; i < pathsCount; ++i)
+	{
+		int fromPoint;
+		int toPoint;
+
+		ExerciseIOHandler >> fromPoint;
+		ExerciseIOHandler >> toPoint;
+
+		--fromPoint;
+		--toPoint;
+
+		tourMap[fromPoint].push_back(toPoint);
+		++inOutPathOfPoints[fromPoint].second;
+		++inOutPathOfPoints[toPoint].first;
+	}
+}
+
+void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vector< std::pair< int, int > > &inOutPathOfPoints, std::map< int, std::vector< int > > &tourMap)
+{
+	std::vector< bool > finishedPoint(inOutPathOfPoints.size(), false);
+	std::stack< int > topologiclyOrderedPoints;
+
+	MB(topologiclyOrderedPoints, tourMap, finishedPoint, startPoint);
+
+	int sumInOutPath = 0;
+	std::vector< int > citicalPoints;
+
+	while (!topologiclyOrderedPoints.empty())
+	{
+		int point = topologiclyOrderedPoints.top();
+		topologiclyOrderedPoints.pop();
+
+		sumInOutPath -= inOutPathOfPoints[point].first;
+		if (sumInOutPath == 0)
+		{
+			citicalPoints.push_back(point + 1);
+		}
+		sumInOutPath += inOutPathOfPoints[point].second;
+	}
+
+	ExerciseIOHandler << citicalPoints.size();
+	ExerciseIOHandler << std::endl;
+	for (auto it = citicalPoints.cbegin(); it != citicalPoints.cend(); ++it)
+	{
+		ExerciseIOHandler << *it;
+		ExerciseIOHandler << std::string(" ");
+	}
+}
+
+void Logic::MB(std::stack<int>& topologiclyOrderedPoints, std::map<int, std::vector<int>>& tourMap, std::vector<bool>& finishedPoint, const int & point)
+{
+	finishedPoint[point] = true;
+	const std::vector< int > &tmpToPoints = tourMap[point];
+
+	for (auto it = tmpToPoints.cbegin(); it != tmpToPoints.cend(); ++it)
+	{
+		if (!finishedPoint[*it])
+		{
+			MB(topologiclyOrderedPoints, tourMap, finishedPoint, *it);
+		}
+	}
+
+	topologiclyOrderedPoints.push(point);
 }

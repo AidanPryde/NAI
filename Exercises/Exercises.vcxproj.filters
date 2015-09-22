@@ -59,9 +59,6 @@
     <ClCompile Include="Logics\Persistance\IOHandler.cpp">
       <Filter>Logics\Persistance</Filter>
     </ClCompile>
-    <ClCompile Include="Logics\DataStruckFunctions.cpp">
-      <Filter>Logics</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helpers\RunTimeTimer.h">
@@ -72,9 +69,6 @@
     </ClInclude>
     <ClInclude Include="Logics\Persistance\IOHandler.h">
       <Filter>Logics\Persistance</Filter>
-    </ClInclude>
-    <ClInclude Include="Logics\DataStruckFunctions.h">
-      <Filter>Logics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
