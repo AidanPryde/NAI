@@ -39,10 +39,10 @@ public:
 	void generateResult52_Calculate(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
 
 	void generateResult70();
-	void generateResult70_Setup(int &startPoint, int &endPoint, std::vector< std::pair< int, int > > &inOutPathOfPoints, std::map< int, std::vector< int > > &tourMap);
-	void generateResult70_Calculate(int &startPoint, int &endPoint, std::vector< std::pair< int, int > > &inOutPathOfPoints, std::map< int, std::vector< int > > &tourMap);
+	void generateResult70_Setup(int &startPoint, int &endPoint, std::vector< int > &inPathOfPoints, std::vector< int > &outPathOfPoints, std::map< int, std::vector< int > > &tourMap);
+	void generateResult70_Calculate(int &startPoint, int &endPoint, std::vector< int > &inPathOfPoints, std::vector< int > &outPathOfPoints, std::map< int, std::vector< int > > &tourMap);
 
-	void MB(std::stack< int> &topologiclyOrderedPoints, std::map< int, std::vector< int > > &tourMap, std::vector< bool > &finishedPoint, const int& point);
+	void MB(std::stack< int> &topologiclyOrderedPoints, const std::map< int, std::vector< int > > &tourMap, std::vector< bool > &finishedPoint, const int& point);
 private:
 	IOHandler ExerciseIOHandler;
 };

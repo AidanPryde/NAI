@@ -397,16 +397,17 @@ void Logic::generateResult70()
 	int startPoint;
 	int endPoint;
 
-	std::vector< std::pair< int, int > > inOutPathOfPoints;
+	std::vector< int > inPathOfPoints;
+	std::vector< int > outPathOfPoints;
 
 	std::map< int, std::vector< int > > tourMap;
 
-	generateResult70_Setup(startPoint, endPoint, inOutPathOfPoints, tourMap);
+	generateResult70_Setup(startPoint, endPoint, inPathOfPoints, outPathOfPoints, tourMap);
 
-	generateResult70_Calculate(startPoint, endPoint, inOutPathOfPoints, tourMap);
+	generateResult70_Calculate(startPoint, endPoint, inPathOfPoints, outPathOfPoints, tourMap);
 }
 
-void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< std::pair< int, int > > &inOutPathOfPoints, std::map< int, std::vector< int > > &tourMap)
+void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< int > &inPathOfPoints, std::vector< int > &outPathOfPoints, std::map< int, std::vector< int > > &tourMap)
 {
 	int pointsCount;
 	int pathsCount;
@@ -419,7 +420,8 @@ void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< 
 	--startPoint;
 	--endPoint;
 
-	inOutPathOfPoints.resize(pointsCount, std::make_pair(0, 0));
+	inPathOfPoints.resize(pointsCount, 0);
+	outPathOfPoints.resize(pointsCount, 0);
 
 	for (int i = 0; i < pathsCount; ++i)
 	{
@@ -433,14 +435,15 @@ void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< 
 		--toPoint;
 
 		tourMap[fromPoint].push_back(toPoint);
-		++inOutPathOfPoints[fromPoint].second;
-		++inOutPathOfPoints[toPoint].first;
+		++inPathOfPoints[fromPoint];
+		++outPathOfPoints[toPoint];
 	}
+
 }
 
-void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vector< std::pair< int, int > > &inOutPathOfPoints, std::map< int, std::vector< int > > &tourMap)
+void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vector< int > &inPathOfPoints, std::vector< int > &outPathOfPoints, std::map< int, std::vector< int > > &tourMap)
 {
-	std::vector< bool > finishedPoint(inOutPathOfPoints.size(), false);
+	std::vector< bool > finishedPoint(inPathOfPoints.size(), false);
 	std::stack< int > topologiclyOrderedPoints;
 
 	MB(topologiclyOrderedPoints, tourMap, finishedPoint, startPoint);
@@ -453,12 +456,12 @@ void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vect
 		int point = topologiclyOrderedPoints.top();
 		topologiclyOrderedPoints.pop();
 
-		sumInOutPath -= inOutPathOfPoints[point].first;
+		sumInOutPath -= inPathOfPoints[point];
 		if (sumInOutPath == 0)
 		{
 			citicalPoints.push_back(point + 1);
 		}
-		sumInOutPath += inOutPathOfPoints[point].second;
+		sumInOutPath += outPathOfPoints[point];
 	}
 
 	ExerciseIOHandler << citicalPoints.size();
@@ -470,16 +473,15 @@ void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vect
 	}
 }
 
-void Logic::MB(std::stack<int>& topologiclyOrderedPoints, std::map<int, std::vector<int>>& tourMap, std::vector<bool>& finishedPoint, const int & point)
+void Logic::MB(std::stack<int>& topologiclyOrderedPoints, const std::map<int, std::vector<int>>& tourMap, std::vector<bool>& finishedPoint, const int & point)
 {
 	finishedPoint[point] = true;
-	const std::vector< int > &tmpToPoints = tourMap[point];
 
-	for (auto it = tmpToPoints.cbegin(); it != tmpToPoints.cend(); ++it)
+	for (auto i = 0; i < tourMap.at(point).size(); ++i)
 	{
-		if (!finishedPoint[*it])
+		if (!finishedPoint[tourMap.at(point).at(i)])
 		{
-			MB(topologiclyOrderedPoints, tourMap, finishedPoint, *it);
+			MB(topologiclyOrderedPoints, tourMap, finishedPoint, tourMap.at(point).at(i));
 		}
 	}
 
