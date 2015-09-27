@@ -66,19 +66,22 @@ void Logic::generateResult25()
 	int tStart;
 	int sumRooms;
 
-	std::map< int, std::vector< int > > jMap;
-	std::map< int, std::vector< int > > tMap;
+	Graph< int > tGraph;
+	Graph< int > jGraph;
 
-	generateResult25_Setup(sumRooms, jStart, tStart, jMap, tMap);
+	generateResult25_Setup(sumRooms, jStart, tStart, tGraph, jGraph);
 
-	generateResult25_Calculate(sumRooms, jStart, tStart, jMap, tMap);	
+	generateResult25_Calculate(sumRooms, jStart, tStart, tGraph, jGraph);
 }
 
-void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, std::map< int, std::vector< int > > &jMap, std::map< int, std::vector< int > > &tMap)
+void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph)
 {
 	int fromRoom;
 	int toRoom;
 	bool isTRooms;
+
+	std::map< int, std::vector< int > > jMap;
+	std::map< int, std::vector< int > > tMap;
 
 	ExerciseIOHandler >> sumRooms;
 	ExerciseIOHandler >> tStart;
@@ -104,11 +107,14 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, std:
 			}
 		}
 	}
+
+	//jGraph.Fill(jMap);
+	//tGraph.Fill(tMap);
 }
 
-void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, std::map< int, std::vector< int > > &jMap, std::map< int, std::vector< int > > &tMap)
+void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph)
 {
-	std::vector< int > dataVector;
+	/*std::vector< int > dataVector;
 	dataVector.resize(sumRooms + 1, 0);
 	dataVector[tStart] = 1;
 
@@ -194,7 +200,7 @@ void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, 
 		{
 			ExerciseIOHandler << std::string("nem");
 		}
-	}
+	}*/
 }
 
 void Logic::generateResult46()
@@ -475,7 +481,7 @@ void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vect
 
 void Logic::MB(std::stack<int>& topologiclyOrderedPoints, const std::map<int, std::vector<int>>& tourMap, std::vector<bool>& finishedPoint, const int & point)
 {
-	finishedPoint[point] = true;
+	/*finishedPoint[point] = true;
 
 	for (auto i = 0; i < tourMap.at(point).size(); ++i)
 	{
@@ -485,5 +491,5 @@ void Logic::MB(std::stack<int>& topologiclyOrderedPoints, const std::map<int, st
 		}
 	}
 
-	topologiclyOrderedPoints.push(point);
+	topologiclyOrderedPoints.push(point);*/
 }

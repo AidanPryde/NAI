@@ -2,21 +2,12 @@
 #define _LOGIC_H_
 
 #include "Persistance\IOHandler.h"
-//#include "DataStruckFunctions.h"
+#include "Graph\Graph.h"
 
 #include <map>
 #include <list>
 #include <set>
 #include <stack>
-
-/*class CompareDist
-{
-public:
-	bool operator()(std::pair< int, int > firstPair, std::pair< int, int > secundPair)
-	{
-		return firstPair.first > secundPair.first;
-	}
-};*/
 
 class Logic
 {
@@ -27,8 +18,8 @@ public:
 	void generateResult(const std::string &exerciseNumberStr);
 
 	void generateResult25();
-	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, std::map< int, std::vector< int > > &jMap, std::map< int, std::vector< int > > &tMap);
-	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, std::map< int, std::vector< int > > &jMap, std::map< int, std::vector< int > > &tMap);
+	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph);
+	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph);
 
 	void generateResult46();
 	void generateResult46_Setup(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed);

@@ -47,6 +47,18 @@
     <Filter Include="Resource Files\In-Outputs\52\Out">
       <UniqueIdentifier>{a2d7c114-f814-40c3-8735-48087e20e78d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\In-Outputs\70">
+      <UniqueIdentifier>{8f3cbf41-d28b-48ae-ba1b-a8fed71ead55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\70\In">
+      <UniqueIdentifier>{e12baea5-d9ca-4961-a772-38ed0715242a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\70\Out">
+      <UniqueIdentifier>{f0ef035e-0988-4dda-8939-3d3edeed4f9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logics\Graph">
+      <UniqueIdentifier>{fb4166e3-a87b-4a17-8c11-be056bcd26bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -69,6 +81,12 @@
     </ClInclude>
     <ClInclude Include="Logics\Persistance\IOHandler.h">
       <Filter>Logics\Persistance</Filter>
+    </ClInclude>
+    <ClInclude Include="Logics\Graph\Graph.h">
+      <Filter>Logics\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Logics\Graph\GraphEdgeWeighted.h">
+      <Filter>Logics\Graph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +182,21 @@
     </Text>
     <Text Include="In-Outputs\52\Out\OUTPUT01.TXT">
       <Filter>Resource Files\In-Outputs\52\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\70\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\70\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\70\In\INPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\70\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\70\In\INPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\70\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\70\In\INPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\70\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\70\In\INPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\70\In</Filter>
     </Text>
   </ItemGroup>
 </Project>
