@@ -26,6 +26,7 @@ int main(int argc, const char* argv[])
 	if (argc == 1)
 	{
 		std::cout << "ERROR: Wrong argument usage. Read README.TXT or use -help argumentum." << std::endl;
+		std::cin.get();
 		exit(1);
 	}
 

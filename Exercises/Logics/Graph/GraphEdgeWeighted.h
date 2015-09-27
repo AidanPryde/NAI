@@ -2,6 +2,7 @@
 #define _GRAPH_EDGE_WEIGHTED_H_
 
 #include <vector>
+#include <map>
 
 class Vertex;
 
@@ -12,6 +13,7 @@ public:
 	Edge(Vertex* otherVertex, int weight = 0) : OtherVertex(otherVertex), Weight(weight) { }
 	Vertex* OtherVertex;
 	int Weight;
+	int Checked;
 };
 
 class Vertex
@@ -34,6 +36,11 @@ public:
 
 private:
 
+	std::map< T, int > IdMap;
+	std::vector< Vertex* > VertexesVector;
+
+	std::vector< Vertex* > StartVertexesVector;
+	std::vector< Vertex* > EndVertexesVector;
 };
 
 template<typename T>

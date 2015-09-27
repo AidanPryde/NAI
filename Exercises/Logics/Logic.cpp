@@ -76,7 +76,7 @@ void Logic::generateResult25()
 
 void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph)
 {
-	int fromRoom;
+	/*int fromRoom;
 	int toRoom;
 	bool isTRooms;
 
@@ -108,8 +108,8 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Grap
 		}
 	}
 
-	//jGraph.Fill(jMap);
-	//tGraph.Fill(tMap);
+	jGraph.Fill(jMap);
+	tGraph.Fill(tMap);*/
 }
 
 void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph)
@@ -403,31 +403,23 @@ void Logic::generateResult70()
 	int startPoint;
 	int endPoint;
 
-	std::vector< int > inPathOfPoints;
-	std::vector< int > outPathOfPoints;
+	Graph< int > tourGraph;
 
-	std::map< int, std::vector< int > > tourMap;
+	generateResult70_Setup(startPoint, endPoint, tourGraph);
 
-	generateResult70_Setup(startPoint, endPoint, inPathOfPoints, outPathOfPoints, tourMap);
-
-	generateResult70_Calculate(startPoint, endPoint, inPathOfPoints, outPathOfPoints, tourMap);
+	generateResult70_Calculate(startPoint, endPoint, tourGraph);
 }
 
-void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< int > &inPathOfPoints, std::vector< int > &outPathOfPoints, std::map< int, std::vector< int > > &tourMap)
+void Logic::generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > &tourGraph)
 {
 	int pointsCount;
 	int pathsCount;
+	std::map< int, std::vector< int > > tourMap;
 
 	ExerciseIOHandler >> pointsCount;
 	ExerciseIOHandler >> pathsCount;
 	ExerciseIOHandler >> startPoint;
 	ExerciseIOHandler >> endPoint;
-
-	--startPoint;
-	--endPoint;
-
-	inPathOfPoints.resize(pointsCount, 0);
-	outPathOfPoints.resize(pointsCount, 0);
 
 	for (int i = 0; i < pathsCount; ++i)
 	{
@@ -437,37 +429,32 @@ void Logic::generateResult70_Setup(int &startPoint, int &endPoint, std::vector< 
 		ExerciseIOHandler >> fromPoint;
 		ExerciseIOHandler >> toPoint;
 
-		--fromPoint;
-		--toPoint;
+		tourGraph.addEdge(fromPoint, toPoint);
+	}
 
-		tourMap[fromPoint].push_back(toPoint);
-		++inPathOfPoints[fromPoint];
-		++outPathOfPoints[toPoint];
+	if (tourGraph.size() != pointsCount)
+	{
+		ExerciseIOHandler << std::string("Wrong input.");
+		ExerciseIOHandler << std::endl;
 	}
 
 }
 
-void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vector< int > &inPathOfPoints, std::vector< int > &outPathOfPoints, std::map< int, std::vector< int > > &tourMap)
+void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, Graph< int > &tourGraph)
 {
-	std::vector< bool > finishedPoint(inPathOfPoints.size(), false);
-	std::stack< int > topologiclyOrderedPoints;
+	tourGraph.deepIngress(startPoint);
 
-	MB(topologiclyOrderedPoints, tourMap, finishedPoint, startPoint);
-
-	int sumInOutPath = 0;
+	size_t sumInOutPath = 0;
 	std::vector< int > citicalPoints;
 
-	while (!topologiclyOrderedPoints.empty())
+	for (size_t i = tourGraph.topologicalSize() - 1; i < -1 ; --i)
 	{
-		int point = topologiclyOrderedPoints.top();
-		topologiclyOrderedPoints.pop();
-
-		sumInOutPath -= inPathOfPoints[point];
+		sumInOutPath -= tourGraph.getTopologicalVertexAt(i)->ParentsVector.size();
 		if (sumInOutPath == 0)
 		{
-			citicalPoints.push_back(point + 1);
+			citicalPoints.push_back(tourGraph.getTopologicalVertexAt(i)->Id);
 		}
-		sumInOutPath += outPathOfPoints[point];
+		sumInOutPath += tourGraph.getTopologicalVertexAt(i)->ChildsVector.size();
 	}
 
 	ExerciseIOHandler << citicalPoints.size();
@@ -479,17 +466,3 @@ void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, std::vect
 	}
 }
 
-void Logic::MB(std::stack<int>& topologiclyOrderedPoints, const std::map<int, std::vector<int>>& tourMap, std::vector<bool>& finishedPoint, const int & point)
-{
-	/*finishedPoint[point] = true;
-
-	for (auto i = 0; i < tourMap.at(point).size(); ++i)
-	{
-		if (!finishedPoint[tourMap.at(point).at(i)])
-		{
-			MB(topologiclyOrderedPoints, tourMap, finishedPoint, tourMap.at(point).at(i));
-		}
-	}
-
-	topologiclyOrderedPoints.push(point);*/
-}
