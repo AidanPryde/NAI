@@ -1,7 +1,5 @@
 #include "Logic.h"
 
-//#include "DataStruckFunctions.h"
-
 #include <sstream>
 #include <limits>
 
@@ -66,17 +64,16 @@ void Logic::generateResult25()
 	int tStart;
 	int sumRooms;
 
-	Graph< int > tGraph;
-	Graph< int > jGraph;
+	GraphEdgeWeighted< int, int > graphEdgeWeighted;
 
-	generateResult25_Setup(sumRooms, jStart, tStart, tGraph, jGraph);
+	generateResult25_Setup(sumRooms, jStart, tStart, graphEdgeWeighted);
 
-	generateResult25_Calculate(sumRooms, jStart, tStart, tGraph, jGraph);
+	generateResult25_Calculate(sumRooms, jStart, tStart, graphEdgeWeighted);
 }
 
-void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph)
+void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted)
 {
-	/*int fromRoom;
+	int fromRoom;
 	int toRoom;
 	bool isTRooms;
 
@@ -99,44 +96,21 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Grap
 		{
 			if (isTRooms)
 			{
-				tMap[fromRoom].push_back(toRoom);
+				graphEdgeWeighted.addEdge(fromRoom, toRoom, 0);
 			}
 			if (!isTRooms)
 			{
-				jMap[fromRoom].push_back(toRoom);
+				graphEdgeWeighted.addEdge(fromRoom, toRoom, 1);
 			}
 		}
 	}
-
-	jGraph.Fill(jMap);
-	tGraph.Fill(tMap);*/
 }
 
-void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph)
+void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted)
 {
-	/*std::vector< int > dataVector;
-	dataVector.resize(sumRooms + 1, 0);
-	dataVector[tStart] = 1;
+	/*graphEdgeWeighted.parallelIngress(tStart, 0, 1);
 
-	std::vector< int > waitingForChecing;
-	waitingForChecing.push_back(tStart);
-
-	while (!waitingForChecing.empty())
-	{
-		const int checkingFrom = waitingForChecing.back();
-		waitingForChecing.pop_back();
-		const std::vector<int> &checkingToVector = tMap[checkingFrom];
-		for (auto it = checkingToVector.cbegin(); it != checkingToVector.cend(); ++it)
-		{
-			if (dataVector[*it] == 0)
-			{
-				dataVector[*it] = 1;
-				waitingForChecing.push_back(*it);
-			}
-		}
-	}
-
-	if (dataVector[jStart] == 1)
+	if (graphEdgeWeighted.getVertexVisitedAt(tStart) == 1)
 	{
 		ExerciseIOHandler << std::string("igen");
 		ExerciseIOHandler << std::endl;
@@ -407,7 +381,7 @@ void Logic::generateResult70()
 
 	generateResult70_Setup(startPoint, endPoint, tourGraph);
 
-	generateResult70_Calculate(startPoint, endPoint, tourGraph);
+	generateResult70_Calculate(startPoint, tourGraph);
 }
 
 void Logic::generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > &tourGraph)
@@ -431,16 +405,9 @@ void Logic::generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > 
 
 		tourGraph.addEdge(fromPoint, toPoint);
 	}
-
-	if (tourGraph.size() != pointsCount)
-	{
-		ExerciseIOHandler << std::string("Wrong input.");
-		ExerciseIOHandler << std::endl;
-	}
-
 }
 
-void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, Graph< int > &tourGraph)
+void Logic::generateResult70_Calculate(int &startPoint, Graph< int > &tourGraph)
 {
 	tourGraph.deepIngress(startPoint);
 
@@ -449,12 +416,12 @@ void Logic::generateResult70_Calculate(int &startPoint, int &endPoint, Graph< in
 
 	for (size_t i = tourGraph.topologicalSize() - 1; i < -1 ; --i)
 	{
-		sumInOutPath -= tourGraph.getTopologicalVertexAt(i)->ParentsVector.size();
+		sumInOutPath -= tourGraph.getTopologicalVertexAt(i)->ParentVertexesVector.size();
 		if (sumInOutPath == 0)
 		{
 			citicalPoints.push_back(tourGraph.getTopologicalVertexAt(i)->Id);
 		}
-		sumInOutPath += tourGraph.getTopologicalVertexAt(i)->ChildsVector.size();
+		sumInOutPath += tourGraph.getTopologicalVertexAt(i)->ChildVertexesVector.size();
 	}
 
 	ExerciseIOHandler << citicalPoints.size();

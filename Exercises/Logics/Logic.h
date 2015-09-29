@@ -3,6 +3,7 @@
 
 #include "Persistance\IOHandler.h"
 #include "Graph\Graph.h"
+#include "Graph\GraphEdgeWeighted.h"
 
 #include <map>
 #include <list>
@@ -18,8 +19,8 @@ public:
 	void generateResult(const std::string &exerciseNumberStr);
 
 	void generateResult25();
-	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph);
-	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, Graph< int > &jGraph, Graph< int > &tGraph);
+	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);
+	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);
 
 	void generateResult46();
 	void generateResult46_Setup(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed);
@@ -31,7 +32,7 @@ public:
 
 	void generateResult70();
 	void generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > &tourGraph);
-	void generateResult70_Calculate(int &startPoint, int &endPoint, Graph< int > &tourGraph);
+	void generateResult70_Calculate(int &startPoint, Graph< int > &tourGraph);
 
 private:
 	IOHandler ExerciseIOHandler;

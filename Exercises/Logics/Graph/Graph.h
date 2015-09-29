@@ -7,25 +7,24 @@
 
 static int deph = 0;
 
-template< typename T >
+template< typename id_t >
 class Vertex
 {
 public:
 	Vertex() : Visited(0), ChieldInSearch(0) { }
-	Vertex(T id, size_t index) : Id(id), Index(index), Visited(0), ChieldInSearch(0) { }
+	Vertex(id_t id, size_t index) : Id(id), Index(index), Visited(0) { }
+
+	std::vector< Vertex< id_t >* > ChildVertexesVector;
+	std::vector< Vertex< id_t >* > ParentVertexesVector;
 
 	int Visited;
-	int ChieldInSearch;
-
-	std::vector< Vertex< T >* > ChildsVector;
-	std::vector< Vertex< T >* > ParentsVector;
 
 	size_t Index;
-	T Id;
+	id_t Id;
 };
 
 
-template< typename T >
+template< typename id_t >
 class Graph
 {
 public:
@@ -33,43 +32,41 @@ public:
 	~Graph();
 
 
-	void addEdge(T from, T to);
+	void addEdge(id_t from, id_t to);
 
-	void parallelIngress(T startVertexId, int setTo = 1, int check = 0);
-	
-	void deepIngress(T startVertexId);
+	void parallelIngress(id_t startVertexId);
+	void deepIngress(id_t startVertexId);
 
-	Vertex< T >* getTopologicalVertexAt(size_t i);
+	Vertex< id_t >* getTopologicalVertexAt(size_t i);
 
 	size_t size();
 	size_t topologicalSize();
 
 	void reSet();
+	void setStartEndVertexesVectors();
 
 private:
 
-	std::map< T, size_t > IdToIndexMap;
-	std::map< size_t, T > IndexToIdMap;
+	std::map< id_t, size_t > IdToIndexMap;
+	std::map< size_t, id_t > IndexToIdMap;
 
-	std::stack< Vertex< T >* > deepIngressStack;
+	std::vector< Vertex< id_t >* > VertexesVector;
 
-	std::vector< Vertex< T >* > VertexesVector;
+	std::vector< Vertex< id_t >* > StartVertexesVector;
+	std::vector< Vertex< id_t >* > EndVertexesVector;
 
-	std::vector< Vertex< T >* > StartVertexesVector;
-	std::vector< Vertex< T >* > EndVertexesVector;
-
-	std::vector< Vertex< T >* > TopologicalOrderVector;
+	std::vector< Vertex< id_t >* > TopologicalOrderVector;
 };
 
 
 
-template<typename T>
-inline Graph<T>::Graph()
+template< typename id_t >
+inline Graph< id_t >::Graph()
 {
 }
 
-template< typename T >
-inline Graph<T>::~Graph()
+template< typename id_t >
+inline Graph< id_t >::~Graph()
 {
 	for (auto it = VertexesVector.begin(); it != VertexesVector.end(); ++it)
 	{
@@ -77,72 +74,104 @@ inline Graph<T>::~Graph()
 	}
 }
 
-template<typename T>
-inline void Graph< T >::addEdge(T fromVertex, T toVertex)
+template< typename id_t >
+inline void Graph< id_t >::addEdge(id_t fromVertex, id_t toVertex)
 {
 	if (IdToIndexMap.find(fromVertex) == IdToIndexMap.end())
 	{
 		IdToIndexMap[fromVertex] = VertexesVector.size();
 		IndexToIdMap[VertexesVector.size()] = fromVertex;
-		VertexesVector.push_back(new Vertex< T >(fromVertex, IdToIndexMap[fromVertex]));
+		VertexesVector.push_back(new Vertex< id_t >(fromVertex, IdToIndexMap[fromVertex]));
 	}
 	
 	if (IdToIndexMap.find(toVertex) == IdToIndexMap.end())
 	{
 		IdToIndexMap[toVertex] = VertexesVector.size();
 		IndexToIdMap[VertexesVector.size()] = toVertex;
-		VertexesVector.push_back(new Vertex< T >(toVertex, IdToIndexMap[toVertex]));
+		VertexesVector.push_back(new Vertex< id_t >(toVertex, IdToIndexMap[toVertex]));
 	}
 
-	VertexesVector[IdToIndexMap[fromVertex]]->ChildsVector.push_back(VertexesVector[IdToIndexMap[toVertex]]);
-	VertexesVector[IdToIndexMap[toVertex]]->ParentsVector.push_back(VertexesVector[IdToIndexMap[fromVertex]]);
+	VertexesVector[IdToIndexMap[fromVertex]]->ChildVertexesVector.push_back(VertexesVector[IdToIndexMap[toVertex]]);
+	VertexesVector[IdToIndexMap[toVertex]]->ParentVertexesVector.push_back(VertexesVector[IdToIndexMap[fromVertex]]);
 
 }
 
-template<typename T>
-inline void Graph< T >::parallelIngress(T startVertexId, int setTo, int check)
+template< typename id_t >
+inline void Graph< id_t >::parallelIngress(id_t startVertexId)
 {
-	std::vector< Vertex< T >* > needToCheck;
+	std::stack< Vertex< id_t >* > needToCheck;
 
-	needToCheck.push_back(VertexesVector[IdToIndexMap[startVertexId]]);
-
+	needToCheck.push(VertexesVector[IdToIndexMap[startVertexId]]);
 	
 	while (!needToCheck.empty())
 	{
-		Vertex< T >* vertex = needToCheck.back();
-		needToCheck.pop_back();
+		Vertex< id_t >* vertex = needToCheck.back();
+		needToCheck.pop();
 
-		for (auto it = vertex->ChildsVector.begin(); it != vertex->ChildsVector.end(); ++it)
+		for (auto it = vertex->ChildVertexesVector.begin(); it != vertex->ChildVertexesVector.end(); ++it)
 		{
 			if ((*it)->Visited == 0)
 			{
 				(*it)->Visited = 1;
-				needToCheck.push_back(*it);
+				needToCheck.push(*it);
 			}
 		}
 	}
 }
 
-template<typename T>
-inline Vertex< T > * Graph< T >::getTopologicalVertexAt(size_t i)
+template< typename id_t >
+inline void Graph< id_t >::deepIngress(id_t startVertexId)
+{
+	TopologicalOrderVector.clear();
+
+	std::stack< Vertex< id_t >* > deepIngressStack;
+
+	deepIngressStack.push(VertexesVector[IdToIndexMap[startVertexId]]);
+
+	while (!deepIngressStack.empty())
+	{
+		Vertex< id_t >* vertex = deepIngressStack.top();
+
+		if (vertex->Visited == 0)
+		{
+			vertex->Visited = 1;
+			for (auto it = vertex->ChildVertexesVector.begin(); it != vertex->ChildVertexesVector.end(); ++it)
+			{
+				if ((*it)->Visited == 0)
+				{
+					deepIngressStack.push(*it);
+				}
+			}
+
+		}
+		else
+		{
+			TopologicalOrderVector.push_back(vertex);
+			deepIngressStack.pop();
+		}
+	}
+}
+
+template< typename id_t >
+inline Vertex< id_t > * Graph< id_t >::getTopologicalVertexAt(size_t i)
 {
 	return TopologicalOrderVector[i];
 }
 
-template<typename T>
-inline size_t Graph<T>::size()
+template< typename id_t >
+inline size_t Graph< id_t >::size()
 {
 	return VertexesVector.size();
 }
 
-template<typename T>
-inline size_t Graph<T>::topologicalSize()
+template< typename id_t >
+inline size_t Graph< id_t >::topologicalSize()
 {
 	return TopologicalOrderVector.size();
 }
 
-template<typename T>
-inline void Graph<T>::reSet()
+template< typename id_t >
+inline void Graph< id_t >::reSet()
 {
 	for (auto it = VertexesVector.begin(); it != VertexesVector.end(); ++it)
 	{
@@ -150,38 +179,19 @@ inline void Graph<T>::reSet()
 	}
 }
 
-template<typename T>
-inline void Graph< T >::deepIngress(T startVertexId)
+template< typename id_t >
+inline void Graph< id_t >::setStartEndVertexesVectors()
 {
-	TopologicalOrderVector.clear();
-
-	while (!deepIngressStack.empty())
+	for (auto it = VertexesVector.begin(); it != VertexesVector.end(); ++it)
 	{
-		deepIngressStack.pop();
-	}
-
-	deepIngressStack.push(VertexesVector[IdToIndexMap[startVertexId]]);
-
-	while (!deepIngressStack.empty())
-	{
-		Vertex< T >* vertex = deepIngressStack.top();
-
-		if (vertex->Visited == 0)
+		if ((*it)->ChildVertexesVector.empty())
 		{
-			vertex->Visited = 1;
-			for (auto it = vertex->ChildsVector.begin(); it != vertex->ChildsVector.end(); ++it)
-			{
-				if ((*it)->Visited == 0)
-				{
-					deepIngressStack.push(*it);
-				}
-			}
-			
+			EndVertexesVector.push_back(*it);
 		}
-		else
+
+		if ((*it)->ParentVertexesVector.empty())
 		{
-			TopologicalOrderVector.push_back(vertex);
-			deepIngressStack.pop();
+			StartVertexesVector.push_back(*it);
 		}
 	}
 }
