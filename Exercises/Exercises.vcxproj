@@ -150,6 +150,7 @@
     <ClCompile Include="Logics\Logic.cpp" />
     <ClCompile Include="Logics\Persistance\IOHandler.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NonDirectionalEdgeWeighted.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helpers\RunTimeTimer.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Logics\Graph\GraphEdgeWeighted.h" />
     <ClInclude Include="Logics\Logic.h" />
     <ClInclude Include="Logics\Persistance\IOHandler.h" />
+    <ClInclude Include="NonDirectionalEdgeWeighted.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Descriptions\46 Leírás.txt" />
@@ -200,6 +202,16 @@
     <Text Include="In-Outputs\70\Out\OUTPUT03.TXT" />
     <Text Include="In-Outputs\70\Out\OUTPUT04.TXT" />
     <Text Include="In-Outputs\70\Out\OUTPUT05.TXT" />
+    <Text Include="In-Outputs\9\In\INPUT01.TXT" />
+    <Text Include="In-Outputs\9\In\INPUT02.TXT" />
+    <Text Include="In-Outputs\9\In\INPUT03.TXT" />
+    <Text Include="In-Outputs\9\In\INPUT04.TXT" />
+    <Text Include="In-Outputs\9\In\INPUT05.TXT" />
+    <Text Include="In-Outputs\9\Out\OUTPUT01.TXT" />
+    <Text Include="In-Outputs\9\Out\OUTPUT02.TXT" />
+    <Text Include="In-Outputs\9\Out\OUTPUT03.TXT" />
+    <Text Include="In-Outputs\9\Out\OUTPUT04.TXT" />
+    <Text Include="In-Outputs\9\Out\OUTPUT05.TXT" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

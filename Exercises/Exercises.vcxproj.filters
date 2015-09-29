@@ -59,6 +59,15 @@
     <Filter Include="Logics\Graph">
       <UniqueIdentifier>{fb4166e3-a87b-4a17-8c11-be056bcd26bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\In-Outputs\9">
+      <UniqueIdentifier>{57868e6c-2154-4a54-af9c-37c42e4f62ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\9\In">
+      <UniqueIdentifier>{a771bc97-8b13-4f31-9806-ad1c9cdcb021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\9\Out">
+      <UniqueIdentifier>{3b2f9597-8679-4e64-81ff-416234c6ceb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -70,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="Logics\Persistance\IOHandler.cpp">
       <Filter>Logics\Persistance</Filter>
+    </ClCompile>
+    <ClCompile Include="NonDirectionalEdgeWeighted.cpp">
+      <Filter>Logics\Graph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +98,9 @@
       <Filter>Logics\Graph</Filter>
     </ClInclude>
     <ClInclude Include="Logics\Graph\GraphEdgeWeighted.h">
+      <Filter>Logics\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="NonDirectionalEdgeWeighted.h">
       <Filter>Logics\Graph</Filter>
     </ClInclude>
   </ItemGroup>
@@ -212,6 +227,36 @@
     </Text>
     <Text Include="In-Outputs\70\Out\OUTPUT05.TXT">
       <Filter>Resource Files\In-Outputs\70\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\9\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\In\INPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\9\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\In\INPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\9\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\In\INPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\9\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\Out\OUTPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\9\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\Out\OUTPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\9\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\Out\OUTPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\9\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\Out\OUTPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\9\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\In\INPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\9\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\9\Out\OUTPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\9\Out</Filter>
     </Text>
   </ItemGroup>
 </Project>

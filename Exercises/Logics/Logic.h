@@ -3,7 +3,7 @@
 
 #include "Persistance\IOHandler.h"
 #include "Graph\Graph.h"
-#include "Graph\GraphEdgeWeighted.h"
+//#include "Graph\GraphEdgeWeighted.h"
 
 #include <map>
 #include <list>
@@ -18,9 +18,13 @@ public:
 
 	void generateResult(const std::string &exerciseNumberStr);
 
-	void generateResult25();
+	void generateResult09();
+	void generateResult09_Setup(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
+	void generateResult09_Calculate(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
+
+	/*void generateResult25();
 	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);
-	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);
+	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);*/
 
 	void generateResult46();
 	void generateResult46_Setup(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed);

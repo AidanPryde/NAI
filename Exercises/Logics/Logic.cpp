@@ -21,10 +21,18 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 
 	switch (exerciseNumber)
 	{
+	case 9:
+		while (ExerciseIOHandler.openNext())
+		{
+			generateResult09();
+			ExerciseIOHandler.close();
+		}
+
+		break;
 	case 25:
 		while (ExerciseIOHandler.openNext())
 		{
-			generateResult25();
+			//generateResult25();
 			ExerciseIOHandler.close();
 		}
 		
@@ -57,7 +65,118 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 		break;
 	}
 }
+void Logic::generateResult09()
+{
+	int testDataCount;
+	ExerciseIOHandler >> testDataCount;
 
+	for (int i = 0; i < testDataCount; ++i)
+	{
+		int vertexCount = 0;
+		int edgeCount = 0;
+
+		std::map< int, std::vector< std::pair< int, int > > > processData;
+
+		generateResult09_Setup(vertexCount, edgeCount, processData);
+
+		generateResult09_Calculate(vertexCount, edgeCount, processData);
+	}
+}
+
+void Logic::generateResult09_Setup(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
+{
+	int fromVertex;
+	int toVertex;
+	int weight;
+
+	ExerciseIOHandler >> vertexCount;
+	ExerciseIOHandler >> edgeCount;
+
+	for (int i = 0; i < edgeCount; ++i)
+	{
+		ExerciseIOHandler >> fromVertex;
+		ExerciseIOHandler >> toVertex;
+		ExerciseIOHandler >> weight;
+		processData[fromVertex].push_back(std::make_pair(toVertex, weight));
+		processData[toVertex].push_back(std::make_pair(fromVertex, weight));
+	}
+}
+
+void Logic::generateResult09_Calculate(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
+{
+	std::vector< int > d(vertexCount + 1, -1);
+	std::vector< int > szin(vertexCount + 1, 0);
+
+	d[1] = 0;
+
+	bool vege = false;
+
+	while (!vege)
+	{
+		int max = d[1];
+		size_t maxIndex = 1;
+		for (size_t i = 1; i < d.size(); ++i)
+		{
+			if (szin[i] == 0 && d[i] > max)
+			{
+				max = d[i];
+				maxIndex = i;
+			}
+		}
+
+		if (szin[maxIndex] == 1)
+		{
+			ExerciseIOHandler << 0;
+			ExerciseIOHandler << std::endl;
+			return;
+		}
+
+		szin[maxIndex] = 1;
+
+		bool a = true;
+		for (size_t i = 1; i < szin.size(); i++)
+		{
+			if (szin[i] == 0)
+			{
+				a = false;
+			}
+		}
+		vege = a;
+
+		std::vector< std::pair< int, int > > & weightedEdgesVector = processData[maxIndex];
+
+		for (auto it = weightedEdgesVector.begin(); it != weightedEdgesVector.end(); ++it)
+		{
+			if (szin[(*it).first] == 0)
+			{
+				if (d[(*it).first] < (*it).second)
+				{
+					d[(*it).first] = (*it).second;
+				}
+			}
+		}
+
+	}
+
+	if (vege)
+	{
+		int min = d[2];
+		size_t minIndex = 2;
+		for (size_t i = 2; i < d.size(); ++i)
+		{
+			if (d[i] < min)
+			{
+				min = d[i];
+				minIndex = i;
+			}
+		}
+		ExerciseIOHandler << d[minIndex];
+		ExerciseIOHandler << std::endl;
+	}
+
+}
+
+/*
 void Logic::generateResult25()
 {
 	int jStart;
@@ -108,7 +227,7 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Grap
 
 void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted)
 {
-	/*graphEdgeWeighted.parallelIngress(tStart, 0, 1);
+	graphEdgeWeighted.parallelIngress(tStart, 0, 1);
 
 	if (graphEdgeWeighted.getVertexVisitedAt(tStart) == 1)
 	{
@@ -174,8 +293,8 @@ void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, 
 		{
 			ExerciseIOHandler << std::string("nem");
 		}
-	}*/
-}
+	}
+}*/
 
 void Logic::generateResult46()
 {
