@@ -68,6 +68,15 @@
     <Filter Include="Resource Files\In-Outputs\9\Out">
       <UniqueIdentifier>{3b2f9597-8679-4e64-81ff-416234c6ceb7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\In-Outputs\77">
+      <UniqueIdentifier>{80ffb545-2def-4515-b0fa-039baba1fcfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\77\In">
+      <UniqueIdentifier>{056768da-90a1-4258-abac-970bd56c606d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\In-Outputs\77\Out">
+      <UniqueIdentifier>{d885e51f-f887-437a-be7d-f284dbf0a96c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -257,6 +266,42 @@
     </Text>
     <Text Include="In-Outputs\9\Out\OUTPUT05.TXT">
       <Filter>Resource Files\In-Outputs\9\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\Out\OUTPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\77\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\Out\OUTPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\77\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\Out\OUTPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\77\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\Out\OUTPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\77\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\Out\OUTPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\77\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\Out\OUTPUT06.TXT">
+      <Filter>Resource Files\In-Outputs\77\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT06.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
     </Text>
   </ItemGroup>
 </Project>

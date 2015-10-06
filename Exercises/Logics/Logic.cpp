@@ -61,10 +61,19 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 		}
 
 		break;
+	case 77:
+		while (ExerciseIOHandler.openNext())
+		{
+			generateResult77();
+			ExerciseIOHandler.close();
+		}
+
+		break;
 	default:
 		break;
 	}
 }
+
 void Logic::generateResult09()
 {
 	int testDataCount;
@@ -143,7 +152,7 @@ void Logic::generateResult09_Calculate(int &vertexCount, int &edgeCount, std::ma
 		}
 		vege = a;
 
-		std::vector< std::pair< int, int > > & weightedEdgesVector = processData[maxIndex];
+		const std::vector< std::pair< int, int > > & weightedEdgesVector = processData[maxIndex];
 
 		for (auto it = weightedEdgesVector.begin(); it != weightedEdgesVector.end(); ++it)
 		{
@@ -552,3 +561,151 @@ void Logic::generateResult70_Calculate(int &startPoint, Graph< int > &tourGraph)
 	}
 }
 
+void Logic::generateResult77()
+{
+	int minesCount = 0;
+
+	std::map< int, std::vector< int > > mines;
+	std::map< int, std::vector< int > > reversedMines;
+
+	generateResult77_Setup(minesCount, mines, reversedMines);
+
+	generateResult77_Calculate(minesCount, mines, reversedMines);
+
+}
+
+void Logic::generateResult77_Setup(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines)
+{
+	ExerciseIOHandler >> minesCount;
+
+	for (int i = 0; i < minesCount; ++i)
+	{
+		int connectedCount;
+
+		ExerciseIOHandler >> connectedCount;
+
+		for (int j = 0; j < connectedCount; ++j)
+		{
+			int connectedMine;
+
+			ExerciseIOHandler >> connectedMine;
+
+			mines[i + 1].push_back(connectedMine);
+			reversedMines[connectedMine].push_back(i + 1);
+		}
+	}
+}
+
+void Logic::generateResult77_Calculate(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines)
+{
+	std::vector< bool > checked(minesCount + 1, false);
+	std::stack< int > deepIngressStack;
+
+	std::stack< int > firstDeepIngressStackResult;
+
+	
+
+	for (auto i = 1; i < checked.size(); ++i)
+	{
+		if (!checked[i])
+		{
+			deepIngressStack.push(i);
+
+			while (!deepIngressStack.empty())
+			{
+				int index = deepIngressStack.top();
+
+				if (!checked[index])
+				{
+					checked[index] = true;
+					const std::vector< int > &minesChild = mines[index];
+					for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
+					{
+						if (!checked[(*it)])
+						{
+							deepIngressStack.push(*it);
+						}
+					}
+				}
+				else
+				{
+					int tmp = deepIngressStack.top();
+					firstDeepIngressStackResult.push(tmp);
+					deepIngressStack.pop();
+				}
+			}
+		}
+	}
+
+	checked.clear();
+	checked.resize(minesCount + 1, false);
+
+	while (!deepIngressStack.empty())
+	{
+		deepIngressStack.pop();
+	}
+
+	std::vector< int > strongChildCounts(minesCount + 1, 0);
+	int strongChildCount = 0;
+
+	while (!firstDeepIngressStackResult.empty())
+	{
+		int vertex = firstDeepIngressStackResult.top();
+		firstDeepIngressStackResult.pop();
+		if (strongChildCounts[vertex] == 0)
+		{
+			++strongChildCount;
+
+			deepIngressStack.push(vertex);
+
+			while (!deepIngressStack.empty())
+			{
+				int index = deepIngressStack.top();
+
+				if (!checked[index])
+				{
+					checked[index] = true;
+					strongChildCounts[index] = strongChildCount;
+					const std::vector< int > &minesChild = reversedMines[index];
+					for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
+					{
+						if (strongChildCounts[(*it)] == 0)
+						{
+							deepIngressStack.push(*it);
+						}
+					}
+				}
+				else
+				{
+					deepIngressStack.pop();
+				}
+			}
+		}
+	}
+
+	std::vector< int > resultVector(strongChildCount + 1, 0);
+
+	for (int i = 1; i < mines.size(); ++i)
+	{
+		const std::vector< int > &minesChild = mines[i];
+		for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
+		{
+			if (strongChildCounts[i] != strongChildCounts[(*it)])
+			{
+				++(resultVector[strongChildCounts[(*it)]]);
+			}
+		}
+	}
+
+	int count = 0;
+
+	for (int i = 1; i < resultVector.size(); ++i)
+	{
+		if (resultVector[i] == 0)
+		{
+			++count;
+		}
+	}
+
+	ExerciseIOHandler << count;
+}

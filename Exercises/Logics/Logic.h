@@ -38,6 +38,10 @@ public:
 	void generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > &tourGraph);
 	void generateResult70_Calculate(int &startPoint, Graph< int > &tourGraph);
 
+	void generateResult77();
+	void generateResult77_Setup(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines);
+	void generateResult77_Calculate(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines);
+
 private:
 	IOHandler ExerciseIOHandler;
 };
