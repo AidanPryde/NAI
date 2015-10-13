@@ -69,6 +69,14 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 		}
 
 		break;
+	case 78:
+		while (ExerciseIOHandler.openNext())
+		{
+			generateResult78();
+			ExerciseIOHandler.close();
+		}
+
+		break;
 	default:
 		break;
 	}
@@ -708,4 +716,119 @@ void Logic::generateResult77_Calculate(int &minesCount, std::map< int, std::vect
 	}
 
 	ExerciseIOHandler << count;
+}
+
+void Logic::generateResult78()
+{
+	int starmapSize;
+	std::vector < std::vector< int> > starmap;
+
+	generateResult78_Setup(starmapSize, starmap);
+
+	generateResult78_Calculate(starmapSize, starmap);
+}
+
+void Logic::generateResult78_Setup(int &starmapSize, std::vector < std::vector< int> > &starmap)
+{
+	int starsCount;
+	ExerciseIOHandler >> starsCount;
+	ExerciseIOHandler >> starmapSize;
+
+	starmap.resize(starmapSize, std::vector< int >(starmapSize, 0));
+
+	for (int i = 0; i < starsCount; ++i)
+	{
+		int x;
+		int y;
+
+		ExerciseIOHandler >> x;
+		ExerciseIOHandler >> y;
+		starmap[x - 1][y - 1] = -1;
+	}
+}
+
+void Logic::generateResult78_Calculate(int &starmapSize, std::vector < std::vector< int> > &starmap)
+{
+	for (int x = 0; x < starmapSize; ++x)
+	{
+		int possibleMaximumWidth = 1;
+		for (int y = 0; y < starmapSize; ++y)
+		{
+			if (starmap[x][y] != -1)
+			{
+				starmap[x][y] = possibleMaximumWidth;
+				++possibleMaximumWidth;
+			}
+			else
+			{
+				possibleMaximumWidth = 1;
+			}
+		}
+	}
+
+	std::vector< std::vector <int> > maximumRectangle;
+
+	int possibleMaximumWidth = 0;
+	int maximumSize = 0;
+
+	for (int y = starmapSize - 1; y > -1; --y)
+	{
+		for (int x = starmapSize - 1; x > -1; --x)
+		{
+			possibleMaximumWidth = 0;
+
+			for (int k = x; k > -1; --k)
+			{
+				if (starmap[k][y] != -1)
+				{
+					if (possibleMaximumWidth > starmap[k][y] - 1 || possibleMaximumWidth == 0)
+					{
+						possibleMaximumWidth = starmap[k][y] - 1;
+					}
+
+					int currentSize = possibleMaximumWidth * (x - k + 1);
+
+					if (currentSize > maximumSize)
+					{
+						maximumRectangle.clear();
+
+						maximumRectangle.push_back(std::vector< int >(4, 0));
+						maximumRectangle.back()[0] = x;
+						maximumRectangle.back()[1] = y;
+						maximumRectangle.back()[2] = k;
+						maximumRectangle.back()[3] = y - possibleMaximumWidth + 1;
+						maximumSize = (abs(x - k) + 1) * (abs(possibleMaximumWidth - 1) + 1);
+					}
+					else if (currentSize == maximumSize)
+					{
+						maximumRectangle.push_back(std::vector< int >(4, 0));
+						maximumRectangle.back()[0] = x;
+						maximumRectangle.back()[1] = y;
+						maximumRectangle.back()[2] = k;
+						maximumRectangle.back()[3] = y - possibleMaximumWidth + 1;
+					}
+				}
+				else
+				{
+					possibleMaximumWidth = 0;
+				}
+			}
+		}
+	}
+	
+	ExerciseIOHandler << maximumSize;
+	ExerciseIOHandler << std::string("\n");
+
+	for (size_t i = 0; i < maximumRectangle.size(); ++i)
+	{
+		ExerciseIOHandler << maximumRectangle[i][0] + 1;
+		ExerciseIOHandler << std::string(" ");
+		ExerciseIOHandler << maximumRectangle[i][1] + 1;
+		ExerciseIOHandler << std::string(" ");
+		ExerciseIOHandler << maximumRectangle[i][2] + 1;
+		ExerciseIOHandler << std::string(" ");
+		ExerciseIOHandler << abs(maximumRectangle[i][3]) + 1;
+		ExerciseIOHandler << std::string("\n");
+	}
+	 
 }
