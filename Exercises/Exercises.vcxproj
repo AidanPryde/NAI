@@ -150,18 +150,14 @@
     <ClCompile Include="Logics\Logic.cpp" />
     <ClCompile Include="Logics\Persistance\IOHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NonDirectionalEdgeWeighted.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helpers\RunTimeTimer.h" />
-    <ClInclude Include="Logics\Graph\Graph.h" />
-    <ClInclude Include="Logics\Graph\GraphEdgeWeighted.h" />
     <ClInclude Include="Logics\Logic.h" />
     <ClInclude Include="Logics\Persistance\IOHandler.h" />
-    <ClInclude Include="NonDirectionalEdgeWeighted.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Descriptions\46 Leírás.txt" />
+    <Text Include="Descriptions\46 info.txt" />
     <Text Include="In-Outputs\25\In\INPUT00.txt" />
     <Text Include="In-Outputs\25\In\INPUT01.txt" />
     <Text Include="In-Outputs\25\In\INPUT02.txt" />

@@ -56,9 +56,6 @@
     <Filter Include="Resource Files\In-Outputs\70\Out">
       <UniqueIdentifier>{f0ef035e-0988-4dda-8939-3d3edeed4f9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Logics\Graph">
-      <UniqueIdentifier>{fb4166e3-a87b-4a17-8c11-be056bcd26bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\In-Outputs\9">
       <UniqueIdentifier>{57868e6c-2154-4a54-af9c-37c42e4f62ef}</UniqueIdentifier>
     </Filter>
@@ -98,9 +95,6 @@
     <ClCompile Include="Logics\Persistance\IOHandler.cpp">
       <Filter>Logics\Persistance</Filter>
     </ClCompile>
-    <ClCompile Include="NonDirectionalEdgeWeighted.cpp">
-      <Filter>Logics\Graph</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helpers\RunTimeTimer.h">
@@ -112,20 +106,8 @@
     <ClInclude Include="Logics\Persistance\IOHandler.h">
       <Filter>Logics\Persistance</Filter>
     </ClInclude>
-    <ClInclude Include="Logics\Graph\Graph.h">
-      <Filter>Logics\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="Logics\Graph\GraphEdgeWeighted.h">
-      <Filter>Logics\Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="NonDirectionalEdgeWeighted.h">
-      <Filter>Logics\Graph</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Descriptions\46 Leírás.txt">
-      <Filter>Resource Files\Descriptions</Filter>
-    </Text>
     <Text Include="In-Outputs\46\In\INPUT00.TXT">
       <Filter>Resource Files\In-Outputs\46\In</Filter>
     </Text>
@@ -341,6 +323,9 @@
     </Text>
     <Text Include="In-Outputs\78\Out\OUTPUT05.TXT">
       <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="Descriptions\46 info.txt">
+      <Filter>Resource Files\Descriptions</Filter>
     </Text>
   </ItemGroup>
 </Project>

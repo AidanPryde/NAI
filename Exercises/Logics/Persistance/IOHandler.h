@@ -11,10 +11,10 @@ class IOHandler
 {
 public:
 	
-	IOHandler(const std::string &rootDirectory);
+	IOHandler(const std::string &rootDirectory = std::string(""));
 	~IOHandler();
 
-	void init(const int &exerciseNumberStr);
+	void init(const int &exerciseNumbe, const int &specificInputNumber);
 
 	bool openNext();
 	void close();

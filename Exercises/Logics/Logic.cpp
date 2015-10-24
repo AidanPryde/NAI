@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <limits>
+#include <forward_list>
 
 Logic::Logic(const std::string &rootDirectory) : 
 	ExerciseIOHandler(rootDirectory)
@@ -12,12 +13,22 @@ Logic::~Logic()
 {
 }
 
-void Logic::generateResult(const std::string &exerciseNumberStr)
+void Logic::generateResult(const std::string &exerciseNumberStr, const std::string &specificInputNumberStr)
 {
-	int exerciseNumber;
-	std::istringstream(exerciseNumberStr) >> exerciseNumber;
+	int exerciseNumber = -1;
+	int specificInputNumber = -1;
 
-	ExerciseIOHandler.init(exerciseNumber);
+	if (!(std::istringstream(exerciseNumberStr) >> exerciseNumber))
+	{
+		throw "ERROR: Wrong first argument. Probably not a number.";
+	}
+
+	if (!(specificInputNumberStr.empty()) && !(std::istringstream(specificInputNumberStr) >> specificInputNumber))
+	{
+		throw "ERROR: Wrong second argument. Probably not a number.";
+	}
+
+	ExerciseIOHandler.init(exerciseNumber, specificInputNumber);
 
 	switch (exerciseNumber)
 	{
@@ -32,7 +43,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 	case 25:
 		while (ExerciseIOHandler.openNext())
 		{
-			//generateResult25();
+			generateResult25();
 			ExerciseIOHandler.close();
 		}
 		
@@ -48,7 +59,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 	case 52:
 		while (ExerciseIOHandler.openNext())
 		{
-			generateResult52();
+			//generateResult52();
 			ExerciseIOHandler.close();
 		}
 
@@ -56,7 +67,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 	case 70:
 		while (ExerciseIOHandler.openNext())
 		{
-			generateResult70();
+			//generateResult70();
 			ExerciseIOHandler.close();
 		}
 
@@ -64,7 +75,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 	case 77:
 		while (ExerciseIOHandler.openNext())
 		{
-			generateResult77();
+			//generateResult77();
 			ExerciseIOHandler.close();
 		}
 
@@ -72,7 +83,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 	case 78:
 		while (ExerciseIOHandler.openNext())
 		{
-			generateResult78();
+			//generateResult78();
 			ExerciseIOHandler.close();
 		}
 
@@ -82,6 +93,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr)
 	}
 }
 
+
 void Logic::generateResult09()
 {
 	int testDataCount;
@@ -89,142 +101,149 @@ void Logic::generateResult09()
 
 	for (int i = 0; i < testDataCount; ++i)
 	{
-		int vertexCount = 0;
-		int edgeCount = 0;
+		int computersCount = 0;
+		int connectionsCount = 0;
 
-		std::map< int, std::vector< std::pair< int, int > > > processData;
+		weightedEdgesVector graph;
 
-		generateResult09_Setup(vertexCount, edgeCount, processData);
+		generateResult09_Setup(computersCount, connectionsCount, graph);
 
-		generateResult09_Calculate(vertexCount, edgeCount, processData);
+		generateResult09_Calculate(computersCount, connectionsCount, graph);
 	}
 }
 
-void Logic::generateResult09_Setup(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
+void Logic::generateResult09_Setup(int &computersCount, int &connectionsCount, weightedEdgesVector &graph)
 {
-	int fromVertex;
-	int toVertex;
-	int weight;
+	int fromComputer;
+	int toComputer;
+	int connectionSpeed;
 
-	ExerciseIOHandler >> vertexCount;
-	ExerciseIOHandler >> edgeCount;
+	ExerciseIOHandler >> computersCount;
+	ExerciseIOHandler >> connectionsCount;
 
-	for (int i = 0; i < edgeCount; ++i)
+	graph.resize(computersCount + 1, std::vector< std::pair < int, int > >(0));
+
+	for (int i = 0; i < connectionsCount; ++i)
 	{
-		ExerciseIOHandler >> fromVertex;
-		ExerciseIOHandler >> toVertex;
-		ExerciseIOHandler >> weight;
-		processData[fromVertex].push_back(std::make_pair(toVertex, weight));
-		processData[toVertex].push_back(std::make_pair(fromVertex, weight));
+
+		ExerciseIOHandler >> fromComputer;
+		ExerciseIOHandler >> toComputer;
+		ExerciseIOHandler >> connectionSpeed;
+
+		//Non-Directional.
+		graph[fromComputer].push_back(std::make_pair(toComputer, connectionSpeed));
+		graph[toComputer].push_back(std::make_pair(fromComputer, connectionSpeed));
 	}
 }
 
-void Logic::generateResult09_Calculate(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
+void Logic::generateResult09_Calculate(int &computersCount, int &connectionsCount, weightedEdgesVector &graph)
 {
-	std::vector< int > d(vertexCount + 1, -1);
-	std::vector< int > szin(vertexCount + 1, 0);
+	std::vector< int > maximumConnectionSpeedOfKnownComputers(computersCount + 1, -1);
+	std::vector< bool > knownComputers(computersCount + 1, false);
 
-	d[1] = 0;
+	maximumConnectionSpeedOfKnownComputers[1] = 0;
 
-	bool vege = false;
+	bool over = false;
+	int notCheckedComputerCount = computersCount;
 
-	while (!vege)
+	while (!over)
 	{
-		int max = d[1];
+		// Get maximum copmputer speed and its index.
+		int max = maximumConnectionSpeedOfKnownComputers[1];
 		size_t maxIndex = 1;
-		for (size_t i = 1; i < d.size(); ++i)
+		for (size_t i = 1; i < maximumConnectionSpeedOfKnownComputers.size(); ++i)
 		{
-			if (szin[i] == 0 && d[i] > max)
+			if (knownComputers[i] == false && maximumConnectionSpeedOfKnownComputers[i] > max)
 			{
-				max = d[i];
+				max = maximumConnectionSpeedOfKnownComputers[i];
 				maxIndex = i;
 			}
 		}
 
-		if (szin[maxIndex] == 1)
+		// The computers are not connected.
+		if (knownComputers[maxIndex] == 1)
 		{
 			ExerciseIOHandler << 0;
 			ExerciseIOHandler << std::endl;
 			return;
 		}
 
-		szin[maxIndex] = 1;
+		// We know it know.
+		knownComputers[maxIndex] = 1;
+		--notCheckedComputerCount;
 
-		bool a = true;
-		for (size_t i = 1; i < szin.size(); i++)
+		// Did we check all?
+		for (size_t i = 1; i < knownComputers.size(); ++i)
 		{
-			if (szin[i] == 0)
-			{
-				a = false;
-			}
+			over |= (notCheckedComputerCount == 0);
 		}
-		vege = a;
 
-		const std::vector< std::pair< int, int > > & weightedEdgesVector = processData[maxIndex];
-
-		for (auto it = weightedEdgesVector.begin(); it != weightedEdgesVector.end(); ++it)
+		// Check the connections for a the maximum.
+		const std::vector< std::pair< int, int > > & connectionsVector = graph[maxIndex];
+		for (auto it = connectionsVector.cbegin(); it != connectionsVector.cend(); ++it)
 		{
-			if (szin[(*it).first] == 0)
+			if (knownComputers[(*it).first] == 0)
 			{
-				if (d[(*it).first] < (*it).second)
+				if (maximumConnectionSpeedOfKnownComputers[(*it).first] < (*it).second)
 				{
-					d[(*it).first] = (*it).second;
+					maximumConnectionSpeedOfKnownComputers[(*it).first] = (*it).second;
 				}
 			}
 		}
-
 	}
 
-	if (vege)
+	// We checked all of the computers.
+	if (over)
 	{
-		int min = d[2];
+		// We seach for the lowest connection speed.
+		int min = maximumConnectionSpeedOfKnownComputers[2];
 		size_t minIndex = 2;
-		for (size_t i = 2; i < d.size(); ++i)
+		for (size_t i = 2; i < maximumConnectionSpeedOfKnownComputers.size(); ++i)
 		{
-			if (d[i] < min)
+			if (maximumConnectionSpeedOfKnownComputers[i] < min)
 			{
-				min = d[i];
+				min = maximumConnectionSpeedOfKnownComputers[i];
 				minIndex = i;
 			}
 		}
-		ExerciseIOHandler << d[minIndex];
+		ExerciseIOHandler << maximumConnectionSpeedOfKnownComputers[minIndex];
 		ExerciseIOHandler << std::endl;
 	}
-
 }
 
-/*
+
 void Logic::generateResult25()
 {
 	int jStart;
 	int tStart;
 	int sumRooms;
 
-	GraphEdgeWeighted< int, int > graphEdgeWeighted;
+	vertexVector jGraph;
+	vertexVector tGraph;
 
-	generateResult25_Setup(sumRooms, jStart, tStart, graphEdgeWeighted);
+	generateResult25_Setup(sumRooms, jStart, tStart, jGraph, tGraph);
 
-	generateResult25_Calculate(sumRooms, jStart, tStart, graphEdgeWeighted);
+	generateResult25_Calculate(sumRooms, jStart, tStart, jGraph, tGraph);
 }
 
-void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted)
+void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph)
 {
 	int fromRoom;
 	int toRoom;
 	bool isTRooms;
 
-	std::map< int, std::vector< int > > jMap;
-	std::map< int, std::vector< int > > tMap;
-
 	ExerciseIOHandler >> sumRooms;
 	ExerciseIOHandler >> tStart;
 	ExerciseIOHandler >> jStart;
+
+	jGraph.resize(sumRooms + 1, std::vector< int >(0));
+	tGraph.resize(sumRooms + 1, std::vector< int >(0));
 
 	isTRooms = true;
 	while (ExerciseIOHandler >> fromRoom)
 	{
 		ExerciseIOHandler >> toRoom;
-		if (fromRoom == -1)
+		if (fromRoom == -1 && toRoom == -1)
 		{
 			isTRooms = false;
 		}
@@ -232,21 +251,45 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, Grap
 		{
 			if (isTRooms)
 			{
-				graphEdgeWeighted.addEdge(fromRoom, toRoom, 0);
+				tGraph[fromRoom].push_back(toRoom);
 			}
 			if (!isTRooms)
 			{
-				graphEdgeWeighted.addEdge(fromRoom, toRoom, 1);
+				jGraph[fromRoom].push_back(toRoom);
 			}
 		}
 	}
 }
 
-void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted)
+void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph)
 {
-	graphEdgeWeighted.parallelIngress(tStart, 0, 1);
+	std::vector< int > roomCheckState(sumRooms + 1, 0);
 
-	if (graphEdgeWeighted.getVertexVisitedAt(tStart) == 1)
+	// Where can we go from tStart in tGraph.
+	std::stack< int > needToCheck;
+	needToCheck.push(tStart);
+
+	roomCheckState[tStart] = 1;
+
+	while (!needToCheck.empty())
+	{
+		const int roomIndex = needToCheck.top();
+		needToCheck.pop();
+
+		const std::vector< int > &neighbourRooms = tGraph[roomIndex];
+
+		for (size_t i = 0; i < neighbourRooms.size(); ++i)
+		{
+			if (roomCheckState[neighbourRooms[i]] == 0)
+			{
+				needToCheck.push(neighbourRooms[i]);
+				roomCheckState[neighbourRooms[i]] = 1;
+			}
+		}
+	}
+
+	// If we reached jStart form tStart throuth tGraph.
+	if (roomCheckState[jStart] == 1)
 	{
 		ExerciseIOHandler << std::string("igen");
 		ExerciseIOHandler << std::endl;
@@ -254,44 +297,48 @@ void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, 
 	}
 	else
 	{
-		bool meetPosible = false;
-		bool circlePosible = false;
-		bool isOver = false;
+		// Where can we go from jStart throuth jGraph.
+		bool meet = false;
+		bool circle = false;
+		bool over = false;
 
-		waitingForChecing.clear();
-		waitingForChecing.push_back(jStart);
+		// The needToCheck stack is empty.
+		needToCheck.push(jStart);
 
-		dataVector[jStart] = 2;
+		// The roomCheckState[jStart] is 0.
+		roomCheckState[jStart] = 2;
 
-		while (!waitingForChecing.empty() && !isOver)
+		while (!(needToCheck.empty()) && !over)
 		{
-			const int checkingFrom = waitingForChecing.back();
-			waitingForChecing.pop_back();
-			const std::vector<int> &checkingToVector = jMap[checkingFrom];
-			for (auto it = checkingToVector.cbegin(); it != checkingToVector.cend(); ++it)
+			const int roomIndex = needToCheck.top();
+			needToCheck.pop();
+
+			const std::vector<int> &neighbourRooms = jGraph[roomIndex];
+			for (auto it = neighbourRooms.cbegin(); it != neighbourRooms.cend(); ++it)
 			{
-				if (dataVector[*it] == 1)
+				if (roomCheckState[(*it)] == 0) // No one was here before.
 				{
-					meetPosible = true;
+					needToCheck.push((*it));
+					roomCheckState[(*it)] = 2;					
 				}
-				else if (dataVector[*it] == 0)
+				else if (roomCheckState[(*it)] == 1) // First search was here before.
 				{
-					dataVector[*it] = 2;
-					waitingForChecing.push_back(*it);
+					meet = true;
 				}
-				else if (dataVector[*it] == 2)
+				else if (roomCheckState[(*it)] == 2) // Second search was here before.
 				{
-					if (*it == jStart)
+					if ((*it) == jStart) // We are at jStart.
 					{
-						circlePosible = true;
+						circle = true;
 					}
 				}
 
-				isOver = meetPosible == true && circlePosible == true;
+				// Do we need to search more?
+				over = (meet == true) && (circle == true);
 			}
 		}
 
-		if (meetPosible)
+		if (meet)
 		{
 			ExerciseIOHandler << std::string("igen");
 		}
@@ -302,7 +349,7 @@ void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, 
 
 		ExerciseIOHandler << std::endl;
 
-		if (circlePosible)
+		if (circle)
 		{
 			ExerciseIOHandler << std::string("igen");
 		}
@@ -311,90 +358,164 @@ void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, 
 			ExerciseIOHandler << std::string("nem");
 		}
 	}
-}*/
+}
+
 
 void Logic::generateResult46()
 {
 	std::string startRiver;
 
-	std::map< std::string, std::vector<std::string > > riverMap;
-	std::map< std::string, std::vector<std::string > > riverMapReversed;
+	vertexVector downStreamGraph;
+	vertexVector upStreamGraph;
 
-	generateResult46_Setup(startRiver, riverMap, riverMapReversed);
+	idMap riversIdMap;
+	reversedIdVector reversedRiversIdVector;
+
+	generateResult46_Setup(startRiver, downStreamGraph, upStreamGraph, riversIdMap, reversedRiversIdVector);
 	
-	generateResult46_Calculate(startRiver, riverMap, riverMapReversed);
+	generateResult46_Calculate(startRiver, downStreamGraph, upStreamGraph, riversIdMap, reversedRiversIdVector);
 }
 
-void Logic::generateResult46_Setup(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed)
+void Logic::generateResult46_Setup(std::string &startRiver, vertexVector &downStreamGraph, vertexVector &upStreamGraph, idMap &riversIdMap, reversedIdVector &reversedRiversIdVector)
 {
-	int riverPairCount;
+	int riversPairCount;
+
 	std::string riverNameFrom;
 	std::string riverNameTo;
 
-	ExerciseIOHandler >> riverPairCount;
+	ExerciseIOHandler >> riversPairCount;
 
-	for (int i = 0; i < riverPairCount; ++i)
+	std::forward_list< std::string > riversDownStreams;
+
+	int idIndex = 0;
+
+	for (int i = 0; i < riversPairCount; ++i)
 	{
 		ExerciseIOHandler >> riverNameFrom;
 		ExerciseIOHandler >> riverNameTo;
-		riverMap[riverNameFrom].push_back(riverNameTo);
-		riverMapReversed[riverNameTo].push_back(riverNameFrom);
-	}
 
+		int& riverIdFrom = riversIdMap[riverNameFrom];
+		if (riverIdFrom == 0)
+		{
+			riverIdFrom = idIndex;
+			++idIndex;
+		}
+
+		int& riverIdTo = riversIdMap[riverNameTo];
+		if (riverIdTo == 0)
+		{
+			riverIdTo = idIndex;
+			++idIndex;
+		}
+
+		riversDownStreams.push_front(riverNameTo);
+		riversDownStreams.push_front(riverNameFrom);
+	}
+	
 	ExerciseIOHandler >> startRiver;
+
+	downStreamGraph.resize(riversIdMap.size(), std::vector< int >(0));
+	upStreamGraph.resize(riversIdMap.size(), std::vector< int >(0));
+
+	while (!(riversDownStreams.empty()))
+	{
+		riverNameFrom = riversDownStreams.front();
+		riversDownStreams.pop_front();
+		riverNameTo = riversDownStreams.front();
+		riversDownStreams.pop_front();
+
+		downStreamGraph[riversIdMap[riverNameFrom]].push_back(riversIdMap[riverNameTo]);
+		upStreamGraph[riversIdMap[riverNameTo]].push_back(riversIdMap[riverNameFrom]);
+	}
+
+	reversedRiversIdVector.resize(riversIdMap.size());
+
+	for (auto it = riversIdMap.cbegin(); it != riversIdMap.cend(); ++it)
+	{
+		reversedRiversIdVector[(*it).second] = (*it).first;
+	}
 }
 
-void Logic::generateResult46_Calculate(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed)
+void Logic::generateResult46_Calculate(std::string &startRiver, vertexVector &downStreamGraph, vertexVector &upStreamGraph, idMap &riversIdMap, reversedIdVector &reversedRiversIdVector)
 {
-	std::set< std::string > resultRiversSet;
-	std::list< std::string > waitingForChecingRiverList;
-	waitingForChecingRiverList.push_back(startRiver);
-	while (!waitingForChecingRiverList.empty())
+	// Init.
+	std::vector< int > riverCheckState(downStreamGraph.size(), 0);
+
+	std::stack< int > needToCheck;
+	needToCheck.push(riversIdMap[startRiver]);
+
+	riverCheckState[riversIdMap[startRiver]] = 1;
+
+	int riversCount = 0;
+
+	// We check the rivers in upStreamGraph from startRiver.
+	while (!(needToCheck.empty()))
 	{
-		const std::vector<std::string > &tmpRiverVector = riverMapReversed[waitingForChecingRiverList.back()];
-		waitingForChecingRiverList.pop_back();
-		for (auto it = tmpRiverVector.cbegin(); it != tmpRiverVector.cend(); ++it)
+		const int riverIndex = needToCheck.top();
+		needToCheck.pop();
+
+		const std::vector< int > &upStreamRivers = upStreamGraph[riverIndex];
+		for (auto it = upStreamRivers.cbegin(); it != upStreamRivers.cend(); ++it)
 		{
-			std::pair< std::set< std::string >::iterator, bool > tmpInsetReturnPair = resultRiversSet.insert(*it);
-			if (tmpInsetReturnPair.second)
+			if (riverCheckState[(*it)] == 0)
 			{
-				waitingForChecingRiverList.push_back(*it);
+				needToCheck.push((*it));
+				riverCheckState[(*it)] = 1;
+				++riversCount;
 			}
 		}
 	}
 
-	ExerciseIOHandler << resultRiversSet.size();
+	// Write out what we found.
+	ExerciseIOHandler << riversCount;
 	ExerciseIOHandler << std::endl;
-	for (auto it = resultRiversSet.cbegin(); it != resultRiversSet.cend(); ++it)
+
+	for (size_t i = 0; i < riverCheckState.size(); ++i)
 	{
-		ExerciseIOHandler << *it;
-		ExerciseIOHandler << std::endl;
+		if (riverCheckState[i] == 1)
+		{
+			ExerciseIOHandler << reversedRiversIdVector[i];
+			ExerciseIOHandler << std::endl;
+			riverCheckState[i] = 0;
+		}
 	}
 
-	resultRiversSet.clear();
-	waitingForChecingRiverList.clear();
-	waitingForChecingRiverList.push_back(startRiver);
-	while (!waitingForChecingRiverList.empty())
+	// The needToCheck stack is empty here.
+	needToCheck.push(riversIdMap[startRiver]);
+	riversCount = 0;
+
+	// We check the rivers in downStreamGraph from startRiver.
+	while (!(needToCheck.empty()))
 	{
-		const std::vector<std::string > &tmpRiverVector = riverMap[waitingForChecingRiverList.back()];
-		waitingForChecingRiverList.pop_back();
-		for (auto it = tmpRiverVector.cbegin(); it != tmpRiverVector.cend(); ++it)
+		const int riverIndex = needToCheck.top();
+		needToCheck.pop();
+
+		const std::vector< int > &downStreamRivers = downStreamGraph[riverIndex];
+		for (auto it = downStreamRivers.cbegin(); it != downStreamRivers.cend(); ++it)
 		{
-			std::pair< std::set< std::string >::iterator, bool > tmpInsetReturnPair = resultRiversSet.insert(*it);
-			if (tmpInsetReturnPair.second)
+			if (riverCheckState[(*it)] == 0)
 			{
-				waitingForChecingRiverList.push_back(*it);
+				needToCheck.push((*it));
+				riverCheckState[(*it)] = 1;
+				++riversCount;
 			}
 		}
 	}
-	ExerciseIOHandler << resultRiversSet.size();
+
+	// Write out what we found.
+	ExerciseIOHandler << riversCount;
 	ExerciseIOHandler << std::endl;
-	for (auto it = resultRiversSet.cbegin(); it != resultRiversSet.cend(); ++it)
+
+	for (size_t i = 0; i < riverCheckState.size(); ++i)
 	{
-		ExerciseIOHandler << *it;
-		ExerciseIOHandler << std::endl;
+		if (riverCheckState[i] == 1)
+		{
+			ExerciseIOHandler << reversedRiversIdVector[i];
+			ExerciseIOHandler << std::endl;
+		}
 	}
 }
+
 
 void Logic::generateResult52()
 {
@@ -403,38 +524,39 @@ void Logic::generateResult52()
 
 	for (int i = 0; i < testDataCount; ++i)
 	{
-		int vertexCount = 0;
+		int stageCount;
 
-		std::map< int, std::vector< std::pair< int, int > > > processData;
+		weightedEdgesVector stageGraph;
 
-		generateResult52_Setup(vertexCount, processData);
+		generateResult52_Setup(stageCount, stageGraph);
 
-		generateResult52_Calculate(vertexCount, processData);
+		generateResult52_Calculate(stageCount, stageGraph);
 	}
 }
 
-void Logic::generateResult52_Setup(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
+void Logic::generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGraph)
 {
-	int edgeCount;
+	int processCount;
 
-	ExerciseIOHandler >> vertexCount;
-	ExerciseIOHandler >> edgeCount;
+	ExerciseIOHandler >> stageCount;
+	ExerciseIOHandler >> processCount;
 	
+	stageGraph.resize(stageCount, std::vector< std::pair< int,int > >(0));
 
-	int fromEdge;
-	int toEdge;
-	int edgeValue;
+	int fromStage;
+	int toStage;
+	int processTime;
 
-	for (int i = 0; i < edgeCount; ++i)
+	for (int i = 0; i < processCount; ++i)
 	{
-		ExerciseIOHandler >> fromEdge;
-		ExerciseIOHandler >> toEdge;
-		ExerciseIOHandler >> edgeValue;
-		processData[fromEdge].push_back(std::make_pair(toEdge, edgeValue));
+		ExerciseIOHandler >> fromStage;
+		ExerciseIOHandler >> toStage;
+		ExerciseIOHandler >> processTime;
+		stageGraph[fromStage].push_back(std::make_pair(toStage, processTime));
 	}
 }
 
-void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData)
+void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph)
 {
 	//DataStruckFunctions dataStruckFunctions;
 
@@ -472,10 +594,10 @@ void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vec
 				 if (newWeight > pathWeightVector[edge])
 				 {
 					 pileVertexesSet.erase(std::make_pair(edge, pathWeightVector[edge]));
-					 /*if (newWeight != 0 && finishedVertex.find(edge) == finishedVertex.end())
+					 if (newWeight != 0 && finishedVertex.find(edge) == finishedVertex.end())
 					 {
 						 vertexesPile.push_back(std::make_pair(edge, &pathWeightVector[edge]));
-					 }*/
+					 }
 					 pathWeightVector[edge] = newWeight;
 					 parentVertexVector[edge] = pathLastVertex;
 					 //dataStruckFunctions.PileOrdering(vertexesPile);
@@ -507,7 +629,7 @@ void Logic::generateResult52_Calculate(int &vertexCount, std::map< int, std::vec
 
 	ExerciseIOHandler << std::endl;
 }
-
+/*
 void Logic::generateResult70()
 {
 	int startPoint;
@@ -832,3 +954,4 @@ void Logic::generateResult78_Calculate(int &starmapSize, std::vector < std::vect
 	}
 	 
 }
+*/

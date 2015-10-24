@@ -7,28 +7,47 @@
 
 IOHandler::IOHandler(const std::string &rootDirectory)
 {
-	
-	std::wstring_convert<std::codecvt<wchar_t, char, mbstate_t> > converter; //ok
-	//std::wstring_convert<std::codecvt_utf8<wchar_t>> converter; // error
-	//std::wstring_convert<std::codecvt_utf16<wchar_t>> converter; // krix krax
-	//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter; // error
-
-	RootDirectory = converter.from_bytes(rootDirectory);
+	if (rootDirectory.empty())
+	{
+		WCHAR buffer[MAX_PATH];
+		GetModuleFileName(NULL, buffer, MAX_PATH);
+		std::wstring::size_type pos = std::wstring(buffer).find_last_of(L"\\/");
 
 
+		RootDirectory = std::wstring(buffer).substr(0, pos);
+	}
+	else
+	{
+		std::wstring_convert<std::codecvt<wchar_t, char, mbstate_t> > converter;
+		//std::wstring_convert<std::codecvt_utf8<wchar_t>> converter; // error
+		//std::wstring_convert<std::codecvt_utf16<wchar_t>> converter; // krix krax
+		//std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter; // error
 
+		RootDirectory = converter.from_bytes(rootDirectory);
+	}
 }
 
 IOHandler::~IOHandler()
 {
 }
 
-void IOHandler::init(const int & exerciseNumber)
+void IOHandler::init(const int & exerciseNumber, const int & specificInputNumber)
 {
 	FileNameVector.clear();
+
 	WideExerciseNumberStr.clear();
 	WideExerciseNumberStr = std::to_wstring(exerciseNumber);
-	getFilesInDirectory(FileNameVector, RootDirectory + L"In-Outputs\\" + WideExerciseNumberStr + L"\\In");
+
+	if (specificInputNumber == -1)
+	{
+		getFilesInDirectory(FileNameVector, RootDirectory + L"\\In-Outputs\\" + WideExerciseNumberStr + L"\\In");
+	}
+	else
+	{
+		std::wstring widespecificInputNumberStr = std::to_wstring(specificInputNumber);
+
+		FileNameVector.push_back(RootDirectory + L"\\In-Outputs\\" + WideExerciseNumberStr + L"\\In\\INPUT" + widespecificInputNumberStr + L".TXT");
+	}
 }
 
 bool IOHandler::openNext()
@@ -42,7 +61,7 @@ bool IOHandler::openNext()
 	
 		IFHandler.open(fileName, std::fstream::in);
 		auto pos = fileName.find(L"INPUT");
-		fileOutDirectory = RootDirectory + L"In-Outputs\\" + WideExerciseNumberStr + L"\\Out\\" + fileName.replace(0, pos + 5, L"OUTPUT");
+		fileOutDirectory = RootDirectory + L"\\In-Outputs\\" + WideExerciseNumberStr + L"\\Out\\" + fileName.replace(0, pos + 5, L"OUTPUT");
 		OFHandler.open(fileOutDirectory, std::fstream::out | std::fstream::trunc);
 
 		return true;
@@ -309,7 +328,7 @@ void IOHandler::getFilesInDirectory(std::vector< std::wstring > &fileNameVector,
 
 	FindClose(dir);
 #else
-	not tested!!!
+	throw "Not supported OS.";
 	DIR *dir;
 	class dirent *ent;
 	class stat st;

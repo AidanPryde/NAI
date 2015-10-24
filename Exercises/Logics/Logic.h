@@ -2,38 +2,42 @@
 #define _LOGIC_H_
 
 #include "Persistance\IOHandler.h"
-#include "Graph\Graph.h"
-//#include "Graph\GraphEdgeWeighted.h"
+#include "Graph\Vertex.h"
 
 #include <map>
 #include <list>
 #include <set>
 #include <stack>
 
+typedef std::vector< std::vector< std::pair< int, int> > > weightedEdgesVector; // 09, 52
+typedef std::vector< std::vector< int > > vertexVector; // 25, 46
+typedef std::map< std::string, int > idMap; // 46
+typedef std::vector< std::string > reversedIdVector; // 46
+
 class Logic
 {
 public:
-	Logic(const std::string &rootDirectory);
+	Logic(const std::string &rootDirectory = std::string(""));
 	~Logic();
 
-	void generateResult(const std::string &exerciseNumberStr);
+	void generateResult(const std::string &exerciseNumberStr, const std::string &specificInputNumberStr = std::string(""));
 
 	void generateResult09();
-	void generateResult09_Setup(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
-	void generateResult09_Calculate(int &vertexCount, int &edgeCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
+	void generateResult09_Setup(int &vertexCount, int &edgeCount, weightedEdgesVector &graph);
+	void generateResult09_Calculate(int &vertexCount, int &edgeCount, weightedEdgesVector &graph);
 
-	/*void generateResult25();
-	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);
-	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, GraphEdgeWeighted< int, int > graphEdgeWeighted);*/
-
+	void generateResult25();
+	void generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph);
+	void generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph);
+	
 	void generateResult46();
-	void generateResult46_Setup(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed);
-	void generateResult46_Calculate(std::string &startRiver, std::map< std::string, std::vector< std::string > > &riverMap, std::map< std::string, std::vector< std::string > > &riverMapReversed);
+	void generateResult46_Setup(std::string &startRiver, vertexVector &downStreamGraph, vertexVector &upStreamGraph, idMap &riversIdVector, reversedIdVector &reversedRiversIdVector);
+	void generateResult46_Calculate(std::string &startRiver, vertexVector &downStreamGraph, vertexVector &upStreamGraph, idMap &riversIdVector, reversedIdVector &reversedRiversIdVector);
 
 	void generateResult52();
-	void generateResult52_Setup(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
-	void generateResult52_Calculate(int &vertexCount, std::map< int, std::vector< std::pair< int, int > > > &processData);
-
+	void generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGraph);
+	void generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph);
+	/*
 	void generateResult70();
 	void generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > &tourGraph);
 	void generateResult70_Calculate(int &startPoint, Graph< int > &tourGraph);
@@ -45,7 +49,7 @@ public:
 	void generateResult78();
 	void generateResult78_Setup(int &starmapSize, std::vector < std::vector< int> > &starmap);
 	void generateResult78_Calculate(int &starmapSize, std::vector < std::vector< int> > &starmap);
-
+	*/
 
 private:
 	IOHandler ExerciseIOHandler;
