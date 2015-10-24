@@ -1,0 +1,21 @@
+Aknák
+
+Feladat
+
+A Különleges Erők tagjaként meg kell tisztítanod egy aknamezőt. Ez a feladat sajnos azzal jár, hogy méretben különböző, de azonosan halálos robbanóerejű aknákat kell kézzel megpiszkálnod. Szerencsére idejében észreveszed, hogy ha egy aknát felrobbantasz, akkor a lökéshullám gyakran elég ahhoz hogy újabb aknák robbanjanak fel, amelyek még további aknákat robbanthatnak fel, és így tovább. Precíz légifelvételeknek hála tudod az aknák számát és azt is sikerült megállapítanod, hogy melyik akna melyik másik aknákat robbantja fel.
+
+Mivel fontos számodra a testi épséged, ezért ezt a dominóeffektust kihasználva szeretnéd minimalizálni a kézzel felrobbantott aknák számát.
+
+(A 2012es Challenge24 EC D feladata alapján)
+
+Bemenet
+
+A bemenet első sora tartalmazza az aknák N számát, majd ezt követi N darab sor, amelyből az i. tartalmazza az i. akna által felrobbantott további aknák számát, illetve azok sorszámait növekvő sorrendben.
+
+Kimenet
+
+A felrobbantandó aknák minimális K száma.
+
+Teszt fáljok: 6 db.
+
+A feladatot a specire kidolgozta: Németh Bence

@@ -1,0 +1,36 @@
+Kommunikációs hálózat sávszélessége
+
+A kommunikációs hálózat tartalmazza a számítógépeket és az azok közötti kétirányú kapcsolatokat. Mindegyik kapcsolathoz sávszélesség tartozik. Bármely, két gépet összekötő hálózatrész sávszélessége alatt az egyes vezetékszakaszok sávszélességének minimumát értjük. Ha két gép között több úton is létesíthető kapcsolat, akkor az összeköttetés sávszélessége ezek közül a maximuma. A teljes hálózat sávszélessége alatt az alkotó gépek közötti sávszélességek minimumát értjük.
+
+Feladat:
+Írj programot, amely beolvassa a hálózat adatait, majd meghatározza a sávszélességét.
+
+Bemenet:
+A bemenet néhány esetet tartalmaz, az esetszámot (T) a NET.IN állomány első sora adja meg. Minden teszteset első sora két egészet, az N és M értékét tartalmazza. N a gépek száma (2<=N<=5000), az M értéke pedig a kapcsolatok számát adja meg (1<=M<=10000). A gépeket 1-től N-ig számozzuk. A következő M sor mindegyike 3 egészet foglal magában, az X, Y és B számokat, (1<=X, Y<=N, X<>Y) ahol X és Y az a két gép, amelyet összekötünk, a B pedig a közöttük lévő sávszélesség. Lehetséges több kapcsolat két gép között.
+
+Kimenet:
+A kimenetnek tesztesetenként egy sort kell tartalmaznia, soronként egy egész számmal, amely a hálózat sávszélességét adja meg. Ha a hálózat nem összefüggő, akkor sávszélessége 0.
+
+Példa:
+
+net.in
+2 
+5 6 
+1 2 12 
+2 3 23 
+3 4 34 
+4 1 41 
+2 5 25 
+3 5 5 
+4 3 
+1 2 1 
+3 4 3 
+1 2 2
+
+net.out
+23
+0
+
+(ACM SZTE csapatverseny)
+Tesztfájlok: 5 db.
+ 

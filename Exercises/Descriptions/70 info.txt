@@ -1,0 +1,36 @@
+Kritikus
+
+Egy kerékpáros versenypálya N ellenőrző pontot tartalmaz. Az ellenőrző pontokat egyirányú útszakaszok kötik össze. A pálya olyan kiépítésű, hogy ha elhagyunk egy ellenőrző pontot, akkor oda biztosan nem tudunk visszajutni. A verseny szervezői kijelölték a start pontot és a cél pontot. A start pontból mindenhová, a cél pontba mindenhonnan el lehet jutni. Szeretnék meghatározni, hogy melyek azok az ellenőrző pontok, amelyeken ha nem halad át egy versenyző, akkor biztosan nem tud eljutni a starttól a célig. Az ilyen ellenőrző pontokat kritikus pontoknak nevezik.
+
+Készíts programot, amely kiszámítja a versenypálya kritikus pontjait!
+Bemenet:
+
+A KRITIKUS.BE állomány első sorában négy egész szám van, az ellenőrző pontok N száma (2<=N<=10000), a közvetlen útszakaszok M (1<=M<=100000) száma, valamint a start A és a cél B sorszáma. Az ellenőrző pontokat az 1,...,N számokkal azonosítjuk A következő M sor mindegyikében két ellenőrző pont sorszáma van, u és v, ami azt jelenti, hogy u-ból v-be vezet közvetlen útszakasz, amelyen u-ból v-be lehet menni.
+Kimenet:
+
+A KRITIKUS.KI állomány első sorába a kritikus pontok K számát kell írni! A második sorba pedig a kritikus pontokat, egy-egy szóközzel elválasztva, tetszőleges sorrendben!
+
+Példa:
+
+Kritikus.be
+10 11 1 6
+1 2
+1 3
+2 7
+3 4
+4 5
+5 6
+7 9
+7 8
+8 3
+9 10
+10 4
+
+Kritikus.ki
+2
+4 5
+
+Tesztfájlok: 5 db.
+
+(Informatikai Diákolimpiák válogató versenye, 2008
+A feladatot a specihez adaptálta, kidolgozta : Gévay Gábor)

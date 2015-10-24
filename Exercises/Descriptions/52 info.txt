@@ -1,0 +1,38 @@
+Kritikus út
+
+Ütemterv gráf: olyan gráf, melynek csúcsai a gyártási folyamat egyes állapotai, a gráf élei, pedig tevékenységek, amelyek a tevékenység időtartamával vannak súlyozva. A gráf tartalmaz két kitüntetett állapotot (csúcsot), a start- (S) és a végállapot (V), amelyek a gyártási folyamat kezdetét illetve végét jelölik.
+
+Kritikus út: S-ből V-be vezető maximális időtartamú út. Tehát a „termék” gyártási ideje legalább akkora, mint a kritikus út időtartama („hossza”).
+
+Pl.: Pudingos palacsinta készítésének ütemterve:
+
+7
+7
+0	1	120
+1	2	15
+2	3	3
+3	5	60
+1	4	20
+4	5	60
+5	6	20
+
+F1: alapanyagok beszerzése (120 perc)
+F2: tészta bekeverése (15 perc)
+F3: serpenyő felmelegítése (3 perc)
+F4: tészta kisütése (60 perc)
+F5: töltelék (puding) megfőzése (20 perc)
+F6: töltelék pihentetése, hűtése (60 perc)
+F7: palacsinták megtöltése (20 perc)
+
+Kritikus út: F1,F5,F6,F7 (220 perc)
+
+Bemenet:
+Az INPUT.TXT első sora tartalmazza a tesztesetek számát. Egy teszteset a következő szerkezetű. A teszteset első sora tartalmazza az állapotok (csúcsok) számát (0<CS<1000). Az állapotokat [0..CS-1] egészekkel azonosítjuk. A teszteset második sora tartalmazza a gyártási tevékenységek (élek) számát (0<=É<1000000, nincsenek párhuzamos élek). Ezután É soron keresztül következik a tevékenységek leírása. Egy tevékenység leírása három nem negatív egészszámmal történik. Egy első két szám a gyártási folyamat egyes állapotainak azonosítói. A tevékenység az első számmal azonosított állapotból a második számmal azonosított állapotba visz. A harmadik szám a tevékenység percben megadott időtartama.
+
+Kimenet:
+A kimenet minden tesztesetre tartalmazza, helyes ütemterv gráf esetén a kritikus út hosszát, majd egy szóköz után egy kritikus utat (az állapotok (csúcsok) azonosítóinak vesszővel elválasztott felsorolásával), különben írjuk ki, hogy „Hibas utemterv!”. Minden teszteset után egy üres sor következik.
+
+
+(Nagy Tibor)
+
+Teszesetek: 2 db.

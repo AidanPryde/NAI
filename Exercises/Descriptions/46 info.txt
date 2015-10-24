@@ -1,0 +1,40 @@
+Folyók
+
+Magyarország folyóiról feljegyeztük, hogy milyen másik folyóba folynak bele (pl. a Rába a Dunába, a Sajó a Tiszába, a Hernád a Sajóba, ...). Minden folyó legfeljebb 1 másikba folyhat bele, de lehet hogy egybe sem (pl. Duna, de a Zala sem folyóba folyik bele).
+A folyó szennyezettségének megállapításához szükség van arra, hogy megállapítsuk, melyik folyóba honnan érkezhet szennyezett víz.
+
+Feladat:
+Készíts programot (FOLYO.PAS vagy FOLYO.C), amely megadja, hogy
+A.     egy folyóba mely folyókból érkezhet víz (akár más folyón keresztül is)
+B.     egy folyóba került szennyezés mely más folyókat szennyezhet meg!
+
+Bemenet:
+A FOLYO.BE állomány első sorában az az N egész szám van, ahány folyóról tudjuk, hogy melyikbe folyik bele (1<=N<=1000). A következő 2*N sor mindegyike egy-egy folyó nevét tartalmazza, a második, negyedik, ... sor azt hogy melyik folyó, a harmadik, ötödik, ... pedig azt, hogy melyikbe folyik bele. Az utolsó sorban egy folyó neve van, az, amelyről az A és a B kérdés szól.
+
+Kimenet:
+A FOLYO.KI állomány első sorába azoknak a folyóknak a K számát kell írni, amelyekből érkezhet víz a FOLYO.BE állomány utolsó sorában levő folyóba. A következő K sorba kell kiírni soronként a folyók nevét. A K+1-edik sorba azoknak a folyóknak az L számát kell írni, amelyekbe eljuthat a szennyeződés a megadott folyóból! Az ezt követő L sorba kell kiírni soronként a folyók nevét.
+
+Példa:
+
+FOLYO.BE
+4 
+Zagyva 
+Tisza 
+Sajó 
+Tisza 
+Tarna 
+Zagyva 
+Gyöngyös 
+Tarna 
+Zagyva
+
+FOLYO.KI
+2
+Tarna
+Gyöngyös
+1
+Tisza
+
+(Nemes Tihamér 2001. döntő)
+
+Teszt fájlok: 6 db.

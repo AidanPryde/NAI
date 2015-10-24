@@ -1,0 +1,39 @@
+Tom és Jerry
+
+Tom és Jerry ugyanabban a házban laknak. Mindkettőjüknek van a házban egy kitüntetett szobája, amit az otthonuknak nevezünk. Otthonaikból kiindulva, mindketten rendszeresen sétálnak a házban. Tom pontosan akkor tud az A szobából átjutni a B szobába, ha az A-ból úgynevezett macskaátjáró nyílik a B szobába. Ezek az átjárók egyirányúak. Ehhez hasonlóan Jerry is csak akkor tud egyik szobából a másikba jutni, ha a szobák közt úgynevezett egérátjáró van. A egérátjárók is egyirányúak. Tom nem használhatja Jerry, míg Jerry nem használhatja Tom átjáróit. Írjunk programot, amely megoldja a következő részfeladatokat.
+
+A. Határozzuk meg, hogy van-e olyan szoba, amelyben Tom és Jerry találkozhat egymással.
+B. Határozzuk meg, hogy Jerry — otthonából indulva — tehet-e olyan körsétát, amely során biztosan nem találkozik Tommal!
+
+Bemenet:
+Az INPUT.TXT állomány egész számokat tartalmaz, amelyek a ház konfigurációját írják le. Az első sor három egészet tartalmaz; az első a ház szobáinak száma, a második Tom otthonának sorszáma, a harmadik Jerry otthonának sorszáma. A következő sorok mindegyike két pozitív egészet tartalmaz. Az A B pár egy macsakátjárót reprezentál az A szobából a B szobába. Az átjárók felsorolását két darab -1 zárja le. Az ezt követő sorok mindegyike ismét két pozitív egészet tartalmaz. Az A B pár egy egérátjárót reprezentál az A szobából a B szobába. A szobák száma legfeljebb 100. A szobák sorszámozása folyamatos 1-től kezdődően.
+
+Kimenet:
+Az OUTPUT.TXT állománynak két szót kell tartalmaznia! Az első szó 'Igen', ha a házban létezik olyan szoba, amelyben Tom és Jerry találkozhat egymással. Ha ilyen szoba nincs, akkor az output 'Nem'. A második szó 'Igen', ha Jerry — otthonából indulva — legalább két szobát érintő körsétát tud tenni úgy, hogy közben biztosan nem találkozik Tommal. Ha ilyen körséta nem létezik, akkor az output 'Nem'.
+
+Példa:
+
+INPUT
+5 3 5 
+1 2 
+2 1 
+3 1 
+4 3 
+5 2 
+-1 -1 
+1 3 
+2 5 
+3 4 
+4 1 
+4 2 
+4 5 
+5 4
+
+OUTPUT
+Igen
+Igen
+
+(ACM regionális verseny 1994)
+Tesztfájlok: 7 db.
+
+ 
