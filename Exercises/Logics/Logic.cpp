@@ -1,8 +1,8 @@
 #include "Logic.h"
 
 #include <sstream>
-#include <limits>
 #include <forward_list>
+#include <queue>
 
 Logic::Logic(const std::string &rootDirectory) : 
 	ExerciseIOHandler(rootDirectory)
@@ -59,7 +59,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr, const std::stri
 	case 52:
 		while (ExerciseIOHandler.openNext())
 		{
-			//generateResult52();
+			generateResult52();
 			ExerciseIOHandler.close();
 		}
 
@@ -121,6 +121,7 @@ void Logic::generateResult09_Setup(int &computersCount, int &connectionsCount, w
 	ExerciseIOHandler >> computersCount;
 	ExerciseIOHandler >> connectionsCount;
 
+	// Indexed from 1. We will not use 0. element.
 	graph.resize(computersCount + 1, std::vector< std::pair < int, int > >(0));
 
 	for (int i = 0; i < connectionsCount; ++i)
@@ -236,6 +237,7 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, vert
 	ExerciseIOHandler >> tStart;
 	ExerciseIOHandler >> jStart;
 
+	// Indexed from 1. We will not use 0. element.
 	jGraph.resize(sumRooms + 1, std::vector< int >(0));
 	tGraph.resize(sumRooms + 1, std::vector< int >(0));
 
@@ -389,6 +391,7 @@ void Logic::generateResult46_Setup(std::string &startRiver, vertexVector &downSt
 
 	int idIndex = 0;
 
+	// Get all river name and count, while building riversIdMap.
 	for (int i = 0; i < riversPairCount; ++i)
 	{
 		ExerciseIOHandler >> riverNameFrom;
@@ -414,6 +417,7 @@ void Logic::generateResult46_Setup(std::string &startRiver, vertexVector &downSt
 	
 	ExerciseIOHandler >> startRiver;
 
+	// Now put them into the graphs.
 	downStreamGraph.resize(riversIdMap.size(), std::vector< int >(0));
 	upStreamGraph.resize(riversIdMap.size(), std::vector< int >(0));
 
@@ -428,6 +432,7 @@ void Logic::generateResult46_Setup(std::string &startRiver, vertexVector &downSt
 		upStreamGraph[riversIdMap[riverNameTo]].push_back(riversIdMap[riverNameFrom]);
 	}
 
+	// Build the reversedRiversIdVector.
 	reversedRiversIdVector.resize(riversIdMap.size());
 
 	for (auto it = riversIdMap.cbegin(); it != riversIdMap.cend(); ++it)
@@ -541,6 +546,7 @@ void Logic::generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGr
 	ExerciseIOHandler >> stageCount;
 	ExerciseIOHandler >> processCount;
 	
+	// Indexed from 0.
 	stageGraph.resize(stageCount, std::vector< std::pair< int,int > >(0));
 
 	int fromStage;
@@ -556,74 +562,166 @@ void Logic::generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGr
 	}
 }
 
-void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph)
+void recessInPileArray(pileArray &pArray, size_t u, size_t v)
 {
-	//DataStruckFunctions dataStruckFunctions;
+	bool l = true;
 
-	int intMaximumValue = std::numeric_limits<int>::max();
-
-	std::vector< int > pathWeightVector(vertexCount, 0);
-	std::vector< int > parentVertexVector(vertexCount, -1);
-	std::set< std::pair< int, int > > pileVertexesSet;
-	//std::vector< std::pair< int, int* > > vertexesPile;
-	std::set< int > finishedVertex;
-
-	pathWeightVector[0] = 0;
-	pileVertexesSet.insert(std::make_pair(0, 0));
-	//vertexesPile.push_back(std::make_pair(0, &pathWeightVector[0]));
-
-	while (!pileVertexesSet.empty())
-	//while (!vertexesPile.empty())
+	while ( ((2 * u) <= v) && l )
 	{
-		 int pathLastVertex = pileVertexesSet.begin()->first;
-		 //int pathLastVertex = vertexesPile.back().first;
-		 int pathLastVertexWeight = pileVertexesSet.begin()->second;
-		 //int pathLastVertexWeight = *vertexesPile.back().second;
-		 pileVertexesSet.erase(pileVertexesSet.begin());
-		 //vertexesPile.pop_back();
-		 finishedVertex.insert(pathLastVertex);
+		size_t ir = 0;
 
-		 const std::vector< std::pair< int, int > > &tmpVertexWeightPairVector = processData[pathLastVertex];
-		 for (auto it = tmpVertexWeightPairVector.cbegin(); it != tmpVertexWeightPairVector.cend(); ++it)
-		 {
-			 if (finishedVertex.find((*it).first) == finishedVertex.end())
-			 {
-				 int edge = (*it).first;
-				 int weight = (*it).second;
-				 int newWeight = pathLastVertexWeight + weight;
-				 if (newWeight > pathWeightVector[edge])
-				 {
-					 pileVertexesSet.erase(std::make_pair(edge, pathWeightVector[edge]));
-					 if (newWeight != 0 && finishedVertex.find(edge) == finishedVertex.end())
-					 {
-						 vertexesPile.push_back(std::make_pair(edge, &pathWeightVector[edge]));
-					 }
-					 pathWeightVector[edge] = newWeight;
-					 parentVertexVector[edge] = pathLastVertex;
-					 //dataStruckFunctions.PileOrdering(vertexesPile);
-					 pileVertexesSet.insert(std::make_pair(edge, pathWeightVector[edge]));
-				 }
-			 }
-		 } 
+		if (((2 * u) + 1) > v || *(pArray[(2 * u)].second) > *(pArray[((2 * u) + 1)].second))
+		{
+			ir = (2 * u);
+		}
+		else
+		{
+			ir = ((2 * u) + 1);
+		}
+
+		if (*(pArray[u].second) >= *(pArray[ir].second))
+		{
+			l = false;
+		}
+		else
+		{
+			std::swap(pArray[u], pArray[ir]);
+			u = ir;
+		}
 	}
+}
 
-	if (parentVertexVector[vertexCount - 1] == -1)
+void startPileArray(pileArray &pArray)
+{
+	size_t i = static_cast<size_t>((pArray.size() - 1) / 2.0);
+
+	while (i >= 1)
 	{
-		ExerciseIOHandler << std::string("Hibas utemterv!") << std::endl;
+		recessInPileArray(pArray, i, (pArray.size() - 1));
+		--i;
+	}
+}
+
+void orderingPileArray(pileArray &pArray)
+{
+	if ((pArray.size() - 1) <= 1)
+	{
+		;
 	}
 	else
 	{
-		ExerciseIOHandler << pathWeightVector[vertexCount - 1];
+		startPileArray(pArray);
+		size_t r = (pArray.size() - 1);
 
-		std::string pathStr;
-		for (int vertex = vertexCount - 1; vertex != 0; vertex = parentVertexVector[vertex])
+		while (r >= 2)
 		{
-			pathStr.insert(0, ", " + std::to_string(vertex));
+			std::swap(pArray[1], pArray[r]);
+			recessInPileArray(pArray, 1, (r - 1));
+			--r;
+		}
+	}
+}
+
+void addOrUpdatePileArray(pileArray &pArray, int index, int* value)
+{
+	bool found = false;
+	for (size_t i = 0; i < pArray.size(); ++i)
+	{
+		if (pArray[i].first == index)
+		{
+			found = true;
+		}
+	}
+
+	if (!found)
+	{
+		pArray.push_back(std::make_pair(index, value));
+	}
+}
+
+void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph)
+{
+	pileArray priorityPileArray(0);
+
+	//int checkedStagesCount = 0;
+
+	std::vector< int > summedProcessTime(stageCount, 0);
+	std::vector< int > parentStageVector(stageCount, -1);
+
+	std::vector< bool > checkedStages(stageCount, false);
+
+	parentStageVector[0] = 0;
+	priorityPileArray.push_back(std::make_pair(0, &summedProcessTime[0]));
+
+	while (!(priorityPileArray.empty()))
+	{
+		 int index = priorityPileArray[0].first;
+
+		 priorityPileArray.erase(priorityPileArray.cbegin());
+
+		 //++checkedStagesCount;
+
+		 const std::vector< std::pair< int,int > > &nextStages = stageGraph[index];
+		 for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
+		 {
+			 if (checkedStages[(*it).first] == false)
+			 {
+				 int newProcessTime = summedProcessTime[index] + (*it).second;
+				 if (newProcessTime > summedProcessTime[(*it).first])
+				 {
+					 summedProcessTime[(*it).first] = newProcessTime;
+					 addOrUpdatePileArray(priorityPileArray, (*it).first, &summedProcessTime[(*it).first]);
+					 orderingPileArray(priorityPileArray);
+					 parentStageVector[(*it).first] = index;
+				 }
+			 }
+		 }
+
+		 // It can contain a circle. We use them once.
+		 checkedStages[index] = true;
+
+		 /*if (priorityPileArray.empty() && checkedStagesCount != stageCount)
+		 {
+			 size_t i = 0;
+			 while (checkedStages[i] == false)
+			 {
+				 ++i;
+			 }
+		 }*/
+	}
+
+	if (parentStageVector[stageCount - 1] == -1)
+	{
+		ExerciseIOHandler << std::string("Hibas utemterv!");
+	}
+	else
+	{
+		int index = stageCount - 1;
+
+		ExerciseIOHandler << summedProcessTime[index];
+		ExerciseIOHandler << std::string(" ");
+
+
+		std::stack< int > stagesPath;
+		stagesPath.push(index);
+
+		while (index != 0)
+		{
+			index = parentStageVector[index];
+			stagesPath.push(index);
 		}
 
-		pathStr.insert(0, " 0");
+		while (!(stagesPath.empty()))
+		{
+			ExerciseIOHandler << stagesPath.top();
 
-		ExerciseIOHandler << pathStr << std::endl;
+			if (stagesPath.top() != stageCount - 1)
+			{
+				ExerciseIOHandler << std::string(", ");
+			}
+
+			stagesPath.pop();
+		}
 		
 	}
 

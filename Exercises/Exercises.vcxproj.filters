@@ -243,5 +243,11 @@
     <Text Include="In-Outputs\52\In\INPUT02.TXT">
       <Filter>Resource Files\In-Outputs\52\In</Filter>
     </Text>
+    <Text Include="In-Outputs\52\Out\OUTPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\52\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\52\Out\OUTPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\52\Out</Filter>
+    </Text>
   </ItemGroup>
 </Project>

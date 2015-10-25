@@ -192,6 +192,8 @@
     <Text Include="In-Outputs\46\Out\OUTPUT06.TXT" />
     <Text Include="In-Outputs\52\In\INPUT01.TXT" />
     <Text Include="In-Outputs\52\In\INPUT02.TXT" />
+    <Text Include="In-Outputs\52\Out\OUTPUT01.TXT" />
+    <Text Include="In-Outputs\52\Out\OUTPUT02.TXT" />
     <Text Include="In-Outputs\9\In\INPUT01.TXT" />
     <Text Include="In-Outputs\9\In\INPUT02.TXT" />
     <Text Include="In-Outputs\9\In\INPUT03.TXT" />

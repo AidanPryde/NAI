@@ -13,6 +13,7 @@ typedef std::vector< std::vector< std::pair< int, int> > > weightedEdgesVector; 
 typedef std::vector< std::vector< int > > vertexVector; // 25, 46
 typedef std::map< std::string, int > idMap; // 46
 typedef std::vector< std::string > reversedIdVector; // 46
+typedef std::vector< std::pair< int, int* > > pileArray; // 52
 
 class Logic
 {

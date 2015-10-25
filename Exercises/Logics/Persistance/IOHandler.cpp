@@ -45,7 +45,10 @@ void IOHandler::init(const int & exerciseNumber, const int & specificInputNumber
 	else
 	{
 		std::wstring widespecificInputNumberStr = std::to_wstring(specificInputNumber);
-
+		if (widespecificInputNumberStr.length() == 1)
+		{
+			widespecificInputNumberStr = L"0" + widespecificInputNumberStr;
+		}
 		FileNameVector.push_back(RootDirectory + L"\\In-Outputs\\" + WideExerciseNumberStr + L"\\In\\INPUT" + widespecificInputNumberStr + L".TXT");
 	}
 }
