@@ -562,132 +562,77 @@ void Logic::generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGr
 	}
 }
 
-void recessInPileArray(pileArray &pArray, size_t u, size_t v)
+struct OrderBySecondPointerValue
 {
-	bool l = true;
-
-	while ( ((2 * u) <= v) && l )
+	constexpr bool operator()(const std::pair< int, int* > &lhs, const std::pair< int, int* > &rhs) const
 	{
-		size_t ir = 0;
-
-		if (((2 * u) + 1) > v || *(pArray[(2 * u)].second) > *(pArray[((2 * u) + 1)].second))
-		{
-			ir = (2 * u);
-		}
-		else
-		{
-			ir = ((2 * u) + 1);
-		}
-
-		if (*(pArray[u].second) >= *(pArray[ir].second))
-		{
-			l = false;
-		}
-		else
-		{
-			std::swap(pArray[u], pArray[ir]);
-			u = ir;
-		}
+		return *(lhs.second) > *(rhs.second);
 	}
-}
-
-void startPileArray(pileArray &pArray)
-{
-	size_t i = static_cast<size_t>((pArray.size() - 1) / 2.0);
-
-	while (i >= 1)
-	{
-		recessInPileArray(pArray, i, (pArray.size() - 1));
-		--i;
-	}
-}
-
-void orderingPileArray(pileArray &pArray)
-{
-	if ((pArray.size() - 1) <= 1)
-	{
-		;
-	}
-	else
-	{
-		startPileArray(pArray);
-		size_t r = (pArray.size() - 1);
-
-		while (r >= 2)
-		{
-			std::swap(pArray[1], pArray[r]);
-			recessInPileArray(pArray, 1, (r - 1));
-			--r;
-		}
-	}
-}
-
-void addOrUpdatePileArray(pileArray &pArray, int index, int* value)
-{
-	bool found = false;
-	for (size_t i = 0; i < pArray.size(); ++i)
-	{
-		if (pArray[i].first == index)
-		{
-			found = true;
-		}
-	}
-
-	if (!found)
-	{
-		pArray.push_back(std::make_pair(index, value));
-	}
-}
+};
 
 void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph)
 {
-	pileArray priorityPileArray(0);
-
 	//int checkedStagesCount = 0;
 
 	std::vector< int > summedProcessTime(stageCount, 0);
 	std::vector< int > parentStageVector(stageCount, -1);
 
-	std::vector< bool > checkedStages(stageCount, false);
+	std::priority_queue< std::pair< int, int* >, std::vector< std::pair< int, int* > >, OrderBySecondPointerValue> activeStages;
 
-	parentStageVector[0] = 0;
-	priorityPileArray.push_back(std::make_pair(0, &summedProcessTime[0]));
+	activeStages.push(std::make_pair(0, &summedProcessTime[0]));
 
-	while (!(priorityPileArray.empty()))
+	while (!(activeStages.empty()))
 	{
-		 int index = priorityPileArray[0].first;
+		int index = activeStages.top().first;
 
-		 priorityPileArray.erase(priorityPileArray.cbegin());
+		activeStages.pop();
 
-		 //++checkedStagesCount;
+		// It may be not connected graph. We do not check.
+		//++checkedStagesCount;
 
-		 const std::vector< std::pair< int,int > > &nextStages = stageGraph[index];
-		 for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
-		 {
-			 if (checkedStages[(*it).first] == false)
-			 {
-				 int newProcessTime = summedProcessTime[index] + (*it).second;
-				 if (newProcessTime > summedProcessTime[(*it).first])
-				 {
-					 summedProcessTime[(*it).first] = newProcessTime;
-					 addOrUpdatePileArray(priorityPileArray, (*it).first, &summedProcessTime[(*it).first]);
-					 orderingPileArray(priorityPileArray);
-					 parentStageVector[(*it).first] = index;
-				 }
-			 }
+		const std::vector< std::pair< int,int > > &nextStages = stageGraph[index];
+		for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
+		{
+			int newProcessTime = summedProcessTime[index] + (*it).second;
+			if (newProcessTime > summedProcessTime[(*it).first])
+			{
+				int i = index;
+				bool notFound = true;
+
+				if (parentStageVector[i] == -1)
+				{
+					notFound = false;
+				}
+				else
+				{
+					while (parentStageVector[i] != -1)
+					{
+						if (parentStageVector[i] == (*it).first)
+						{
+							notFound = false;
+							break;
+						}
+
+						i = parentStageVector[i];
+					}
+				}
+
+				if (notFound)
+				{
+					summedProcessTime[(*it).first] = newProcessTime;
+
+					if (activeStages.size() > 1)
+					{
+						make_heap(const_cast<std::pair< int, int* >*>(&activeStages.top()),
+							const_cast<std::pair< int, int* >*>(&activeStages.top()) + activeStages.size(),
+							OrderBySecondPointerValue());
+					}
+
+					activeStages.push(std::make_pair((*it).first, &summedProcessTime[(*it).first]));
+					parentStageVector[(*it).first] = index;
+				}
+			}
 		 }
-
-		 // It can contain a circle. We use them once.
-		 checkedStages[index] = true;
-
-		 /*if (priorityPileArray.empty() && checkedStagesCount != stageCount)
-		 {
-			 size_t i = 0;
-			 while (checkedStages[i] == false)
-			 {
-				 ++i;
-			 }
-		 }*/
 	}
 
 	if (parentStageVector[stageCount - 1] == -1)
