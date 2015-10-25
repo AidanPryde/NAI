@@ -9,7 +9,8 @@ int main(int argc, const char* argv[])
 	{
 		RunTimeTimer runTimeTimer;
 
-		Logic logic("C:\\Users\\Márton\\Documents\\Visual Studio 2015\\Projects\\NAI exercises\\Exercises");
+		Logic logic("C:\\Users\\Pesi\\Documents\\GitHubVisualStudio\\NAI-exercises\\Exercises");
+		//Logic logic("C:\\Users\\Márton\\Documents\\Visual Studio 2015\\Projects\\NAI exercises\\Exercises");
 		//Logic logic;
 
 		if (argc == 1)

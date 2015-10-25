@@ -572,7 +572,40 @@ struct OrderBySecondPointerValue
 
 void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph)
 {
-	//int checkedStagesCount = 0;
+	std::stack< int > topologicalOrderingStates;
+	std::vector< int > checkedStates(stageCount, 0);
+
+	for (auto i = 1; i < checked.size(); ++i)
+		+ {
+		+if (!checked[i])
+			+ {
+			+deepIngressStack.push(i);
+			+
+				+while (!deepIngressStack.empty())
+				+ {
+				+int index = deepIngressStack.top();
+				+
+					+if (!checked[index])
+					+ {
+					+checked[index] = true;
+					+const std::vector< int > &minesChild = mines[index];
+					+for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
+						+ {
+						+if (!checked[(*it)])
+							+ {
+							+deepIngressStack.push(*it);
+							+}
+						+}
+					+}
+				+else
+					+ {
+					+int tmp = deepIngressStack.top();
+					+firstDeepIngressStackResult.push(tmp);
+					+deepIngressStack.pop();
+					+}
+				+}
+			+}
+		+}
 
 	std::vector< int > summedProcessTime(stageCount, 0);
 	std::vector< int > parentStageVector(stageCount, -1);
@@ -587,24 +620,17 @@ void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &sta
 
 		activeStages.pop();
 
-		// It may be not connected graph. We do not check.
-		//++checkedStagesCount;
-
 		const std::vector< std::pair< int,int > > &nextStages = stageGraph[index];
 		for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
 		{
-			int newProcessTime = summedProcessTime[index] + (*it).second;
-			if (newProcessTime > summedProcessTime[(*it).first])
+			if ((*it).first != index)
 			{
-				int i = index;
-				bool notFound = true;
+				int newProcessTime = summedProcessTime[index] + (*it).second;
+				if (newProcessTime > summedProcessTime[(*it).first])
+				{
+					int i = index;
+					bool notFound = true;
 
-				if (parentStageVector[i] == -1)
-				{
-					notFound = false;
-				}
-				else
-				{
 					while (parentStageVector[i] != -1)
 					{
 						if (parentStageVector[i] == (*it).first)
@@ -615,21 +641,21 @@ void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &sta
 
 						i = parentStageVector[i];
 					}
-				}
 
-				if (notFound)
-				{
-					summedProcessTime[(*it).first] = newProcessTime;
-
-					if (activeStages.size() > 1)
+					if (notFound)
 					{
-						make_heap(const_cast<std::pair< int, int* >*>(&activeStages.top()),
-							const_cast<std::pair< int, int* >*>(&activeStages.top()) + activeStages.size(),
-							OrderBySecondPointerValue());
-					}
+						summedProcessTime[(*it).first] = newProcessTime;
 
-					activeStages.push(std::make_pair((*it).first, &summedProcessTime[(*it).first]));
-					parentStageVector[(*it).first] = index;
+						if (activeStages.size() > 1)
+						{
+							make_heap(const_cast<std::pair< int, int* >*>(&activeStages.top()),
+								const_cast<std::pair< int, int* >*>(&activeStages.top()) + activeStages.size(),
+								OrderBySecondPointerValue());
+						}
+
+						activeStages.push(std::make_pair((*it).first, &summedProcessTime[(*it).first]));
+						parentStageVector[(*it).first] = index;
+					}
 				}
 			}
 		 }
