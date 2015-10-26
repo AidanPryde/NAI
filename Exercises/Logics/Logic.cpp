@@ -83,7 +83,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr, const std::stri
 	case 78:
 		while (ExerciseIOHandler.openNext())
 		{
-			//generateResult78();
+			generateResult78();
 			ExerciseIOHandler.close();
 		}
 
@@ -930,24 +930,25 @@ void Logic::generateResult77_Calculate(vertexVector &minesGraph, vertexVector &m
 	ExerciseIOHandler << count;
 }
 
-/*
+
 void Logic::generateResult78()
 {
-	int starmapSize;
-	std::vector < std::vector< int> > starmap;
+	matrix starmapMatrix;
 
-	generateResult78_Setup(starmapSize, starmap);
+	generateResult78_Setup(starmapMatrix);
 
-	generateResult78_Calculate(starmapSize, starmap);
+	generateResult78_Calculate(starmapMatrix);
 }
 
-void Logic::generateResult78_Setup(int &starmapSize, std::vector < std::vector< int> > &starmap)
+void Logic::generateResult78_Setup(matrix &starmapMatrix)
 {
+	int starmapSize;
 	int starsCount;
+
 	ExerciseIOHandler >> starsCount;
 	ExerciseIOHandler >> starmapSize;
 
-	starmap.resize(starmapSize, std::vector< int >(starmapSize, 0));
+	starmapMatrix.resize(starmapSize, std::vector< int >(starmapSize, -1));
 
 	for (int i = 0; i < starsCount; ++i)
 	{
@@ -956,20 +957,23 @@ void Logic::generateResult78_Setup(int &starmapSize, std::vector < std::vector< 
 
 		ExerciseIOHandler >> x;
 		ExerciseIOHandler >> y;
-		starmap[x - 1][y - 1] = -1;
+
+		starmapMatrix[x - 1][y - 1] = 0;
 	}
 }
 
-void Logic::generateResult78_Calculate(int &starmapSize, std::vector < std::vector< int> > &starmap)
+void Logic::generateResult78_Calculate(matrix &starmapMatrix)
 {
-	for (int x = 0; x < starmapSize; ++x)
+	// How width can be the rectangle to the right from the cells in the rows.
+	for (int x = 0; x < starmapMatrix.size(); ++x)
 	{
 		int possibleMaximumWidth = 1;
-		for (int y = 0; y < starmapSize; ++y)
+
+		for (int y = starmapMatrix.size() - 1; y >= 0; --y)
 		{
-			if (starmap[x][y] != -1)
+			if (starmapMatrix[x][y] != 0)
 			{
-				starmap[x][y] = possibleMaximumWidth;
+				starmapMatrix[x][y] = possibleMaximumWidth;
 				++possibleMaximumWidth;
 			}
 			else
@@ -979,51 +983,58 @@ void Logic::generateResult78_Calculate(int &starmapSize, std::vector < std::vect
 		}
 	}
 
-	std::vector< std::vector <int> > maximumRectangle;
+	// Saving the results.
+	std::vector< int > maximumRectangles;
 
-	int possibleMaximumWidth = 0;
 	int maximumSize = 0;
 
-	for (int y = starmapSize - 1; y > -1; --y)
+	// We go collum by collum.
+	for (int y = 0; y < starmapMatrix.size(); ++y)
 	{
-		for (int x = starmapSize - 1; x > -1; --x)
+		for (int x = 0; x < starmapMatrix.size(); ++x)
 		{
-			possibleMaximumWidth = 0;
+			int possibleMaximumWidth = 0;
+			int height = 0;
 
-			for (int k = x; k > -1; --k)
+			// The rest cells in the collum.
+			for (int xIndex = x; xIndex < starmapMatrix.size(); ++xIndex)
 			{
-				if (starmap[k][y] != -1)
+				// If it was not a star.
+				if (starmapMatrix[xIndex][y] != 0)
 				{
-					if (possibleMaximumWidth > starmap[k][y] - 1 || possibleMaximumWidth == 0)
+					// We update to have the minimum from x to xIndex in the collum.
+					if (possibleMaximumWidth > starmapMatrix[xIndex][y] || possibleMaximumWidth == 0)
 					{
-						possibleMaximumWidth = starmap[k][y] - 1;
+						possibleMaximumWidth = starmapMatrix[xIndex][y];
 					}
 
-					int currentSize = possibleMaximumWidth * (x - k + 1);
+					++height;
 
-					if (currentSize > maximumSize)
+					// The size of the discovered now rectangle.
+					int size = possibleMaximumWidth * height;
+
+					if (maximumSize < size)
 					{
-						maximumRectangle.clear();
+						maximumSize = size;
 
-						maximumRectangle.push_back(std::vector< int >(4, 0));
-						maximumRectangle.back()[0] = x;
-						maximumRectangle.back()[1] = y;
-						maximumRectangle.back()[2] = k;
-						maximumRectangle.back()[3] = y - possibleMaximumWidth + 1;
-						maximumSize = (abs(x - k) + 1) * (abs(possibleMaximumWidth - 1) + 1);
+						maximumRectangles.clear();
+
+						maximumRectangles.push_back(x);
+						maximumRectangles.push_back(y);
+						maximumRectangles.push_back(xIndex);
+						maximumRectangles.push_back(y + possibleMaximumWidth);
 					}
-					else if (currentSize == maximumSize)
+					else if (maximumSize == size)
 					{
-						maximumRectangle.push_back(std::vector< int >(4, 0));
-						maximumRectangle.back()[0] = x;
-						maximumRectangle.back()[1] = y;
-						maximumRectangle.back()[2] = k;
-						maximumRectangle.back()[3] = y - possibleMaximumWidth + 1;
+						maximumRectangles.push_back(x);
+						maximumRectangles.push_back(y);
+						maximumRectangles.push_back(xIndex);
+						maximumRectangles.push_back(y + possibleMaximumWidth);
 					}
 				}
 				else
 				{
-					possibleMaximumWidth = 0;
+					height = 0;
 				}
 			}
 		}
@@ -1032,17 +1043,16 @@ void Logic::generateResult78_Calculate(int &starmapSize, std::vector < std::vect
 	ExerciseIOHandler << maximumSize;
 	ExerciseIOHandler << std::string("\n");
 
-	for (size_t i = 0; i < maximumRectangle.size(); ++i)
+	for (int i = 0; i < maximumRectangles.size(); i += 4)
 	{
-		ExerciseIOHandler << maximumRectangle[i][0] + 1;
+		ExerciseIOHandler << maximumRectangles[i] + 1;
 		ExerciseIOHandler << std::string(" ");
-		ExerciseIOHandler << maximumRectangle[i][1] + 1;
+		ExerciseIOHandler << maximumRectangles[i + 1] + 1;
 		ExerciseIOHandler << std::string(" ");
-		ExerciseIOHandler << maximumRectangle[i][2] + 1;
+		ExerciseIOHandler << maximumRectangles[i + 2] + 1;
 		ExerciseIOHandler << std::string(" ");
-		ExerciseIOHandler << abs(maximumRectangle[i][3]) + 1;
+		ExerciseIOHandler << maximumRectangles[i + 3];
 		ExerciseIOHandler << std::string("\n");
 	}
 	 
 }
-*/

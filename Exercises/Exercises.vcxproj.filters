@@ -315,5 +315,48 @@
     <Text Include="In-Outputs\77\Out\OUTPUT06.TXT">
       <Filter>Resource Files\In-Outputs\77\Out</Filter>
     </Text>
+    <Text Include="In-Outputs\78\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\In\INPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\In\INPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\In\INPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\In\INPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\In\INPUT06.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\In\INPUT07.TXT">
+      <Filter>Resource Files\In-Outputs\78\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT06.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="In-Outputs\78\Out\OUTPUT07.TXT">
+      <Filter>Resource Files\In-Outputs\78\Out</Filter>
+    </Text>
+    <Text Include="SortDocumentation.txt" />
   </ItemGroup>
 </Project>

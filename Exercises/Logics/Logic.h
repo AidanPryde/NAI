@@ -13,6 +13,7 @@ typedef std::vector< std::vector< std::pair< int, int> > > weightedEdgesVector; 
 typedef std::vector< std::vector< int > > vertexVector; // 25, 46, 70, 77
 typedef std::map< std::string, int > idMap; // 46
 typedef std::vector< std::string > reversedIdVector; // 46
+typedef std::vector< std::vector< int > > matrix; // 78
 
 class Logic
 {
@@ -45,11 +46,11 @@ public:
 	void generateResult77();
 	void generateResult77_Setup(vertexVector &minesGraph, vertexVector &minesReversedGraph);
 	void generateResult77_Calculate(vertexVector &minesGraph, vertexVector &minesReversedGraph);
-	/*
+	
 	void generateResult78();
-	void generateResult78_Setup(int &starmapSize, std::vector < std::vector< int> > &starmap);
-	void generateResult78_Calculate(int &starmapSize, std::vector < std::vector< int> > &starmap);
-	*/
+	void generateResult78_Setup(matrix &starmap);
+	void generateResult78_Calculate(matrix &starmap);
+	
 
 private:
 	IOHandler ExerciseIOHandler;

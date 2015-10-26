@@ -1,0 +1,32 @@
+It does compile on WIN7 and WIN8.1 with the latest .NET in Visual Studio 2015.
+
+The program usage:
+
+	You have to give the program the exercise number as the first argument of the program.
+	You can specified one test file number as the second argument of the program.
+	
+	The test files names are specific like INPUT01.TXT, INPUT02.TXT, ... .
+	You have to gave the numbers as X, not like 0X (as 1, not like 01).
+	The program will process the test file(s) from root/In-Outputs/<exercise number>/In/.
+	Then put the output file(s) to the root/In-Outputs/<exercise number>/Out/ mappa.
+	Rewrite the file(s) there with the same name.
+	The output file(s) name(s) are like OUTPUT01.TXT and so on.
+	
+	The root is burned in the main file right now for debuging (the exe root is commented.)
+	
+	The details of the exercises can be found at http://fi.inf.elte.hu/adatszerkezet/implementalas/feladatok.html and in the Descriptions mappa.
+	
+	The numbers of the worked out exercises are 9, 25, 46, 52, 70, 77, 78.
+
+Structure:
+
+	main	<-- RunTimeTimer (Help to get run time.)
+			<-- Logic (The code that answers the problems.)
+				<-- IOHandler (Read in the test files, and write the output.)
+
+	You can find the magic in the logic. The exercises are broken down to 3 parts.
+		The control generateResultXX function, that run the generateResultXX_Setup and the generateResultXX_Calculate.
+		The read in generateResultXX_Setup and refine it if we have to.
+		The calculater generateResultXX_Calculate, that uses the read in data. Write out the sollutions.
+		
+	It throws exceptions, if it got a wrong agrument, but it do not check the test inputs.

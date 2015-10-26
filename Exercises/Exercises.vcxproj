@@ -216,6 +216,20 @@
     <Text Include="In-Outputs\77\Out\OUTPUT04.TXT" />
     <Text Include="In-Outputs\77\Out\OUTPUT05.TXT" />
     <Text Include="In-Outputs\77\Out\OUTPUT06.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT01.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT02.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT03.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT04.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT05.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT06.TXT" />
+    <Text Include="In-Outputs\78\In\INPUT07.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT01.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT02.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT03.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT04.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT05.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT06.TXT" />
+    <Text Include="In-Outputs\78\Out\OUTPUT07.TXT" />
     <Text Include="In-Outputs\9\In\INPUT01.TXT" />
     <Text Include="In-Outputs\9\In\INPUT02.TXT" />
     <Text Include="In-Outputs\9\In\INPUT03.TXT" />
@@ -226,6 +240,7 @@
     <Text Include="In-Outputs\9\Out\OUTPUT03.TXT" />
     <Text Include="In-Outputs\9\Out\OUTPUT04.TXT" />
     <Text Include="In-Outputs\9\Out\OUTPUT05.TXT" />
+    <Text Include="SortDocumentation.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
