@@ -67,7 +67,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr, const std::stri
 	case 70:
 		while (ExerciseIOHandler.openNext())
 		{
-			//generateResult70();
+			generateResult70();
 			ExerciseIOHandler.close();
 		}
 
@@ -104,16 +104,19 @@ void Logic::generateResult09()
 		int computersCount = 0;
 		int connectionsCount = 0;
 
-		weightedEdgesVector graph;
+		weightedEdgesVector networkGraph;
 
-		generateResult09_Setup(computersCount, connectionsCount, graph);
+		generateResult09_Setup(networkGraph);
 
-		generateResult09_Calculate(computersCount, connectionsCount, graph);
+		generateResult09_Calculate(networkGraph);
 	}
 }
 
-void Logic::generateResult09_Setup(int &computersCount, int &connectionsCount, weightedEdgesVector &graph)
+void Logic::generateResult09_Setup(weightedEdgesVector &networkGraph)
 {
+	int computersCount;
+	int connectionsCount;
+
 	int fromComputer;
 	int toComputer;
 	int connectionSpeed;
@@ -121,8 +124,8 @@ void Logic::generateResult09_Setup(int &computersCount, int &connectionsCount, w
 	ExerciseIOHandler >> computersCount;
 	ExerciseIOHandler >> connectionsCount;
 
-	// Indexed from 1. We will not use 0. element.
-	graph.resize(computersCount + 1, std::vector< std::pair < int, int > >(0));
+	// Indexed from 1. We will not use 0. index.
+	networkGraph.resize(computersCount + 1, std::vector< std::pair < int, int > >(0));
 
 	for (int i = 0; i < connectionsCount; ++i)
 	{
@@ -132,26 +135,28 @@ void Logic::generateResult09_Setup(int &computersCount, int &connectionsCount, w
 		ExerciseIOHandler >> connectionSpeed;
 
 		//Non-Directional.
-		graph[fromComputer].push_back(std::make_pair(toComputer, connectionSpeed));
-		graph[toComputer].push_back(std::make_pair(fromComputer, connectionSpeed));
+		networkGraph[fromComputer].push_back(std::make_pair(toComputer, connectionSpeed));
+		networkGraph[toComputer].push_back(std::make_pair(fromComputer, connectionSpeed));
 	}
 }
 
-void Logic::generateResult09_Calculate(int &computersCount, int &connectionsCount, weightedEdgesVector &graph)
+void Logic::generateResult09_Calculate(weightedEdgesVector &networkGraph)
 {
-	std::vector< int > maximumConnectionSpeedOfKnownComputers(computersCount + 1, -1);
-	std::vector< bool > knownComputers(computersCount + 1, false);
+	// We will not use 0. index in these vectors.
+	std::vector< int > maximumConnectionSpeedOfKnownComputers(networkGraph.size(), -1);
+	std::vector< bool > knownComputers(networkGraph.size(), false);
 
 	maximumConnectionSpeedOfKnownComputers[1] = 0;
 
 	bool over = false;
-	int notCheckedComputerCount = computersCount;
+	int notCheckedComputerCount = networkGraph.size() - 1; // We did not use 0. index, thats why the '- 1';
 
 	while (!over)
 	{
-		// Get maximum copmputer speed and its index.
+		// Get maximum copmputer speed and its index. We set to the 1. index, because we do not use the 0. index.
 		int max = maximumConnectionSpeedOfKnownComputers[1];
 		size_t maxIndex = 1;
+
 		for (size_t i = 1; i < maximumConnectionSpeedOfKnownComputers.size(); ++i)
 		{
 			if (knownComputers[i] == false && maximumConnectionSpeedOfKnownComputers[i] > max)
@@ -180,7 +185,7 @@ void Logic::generateResult09_Calculate(int &computersCount, int &connectionsCoun
 		}
 
 		// Check the connections for a the maximum.
-		const std::vector< std::pair< int, int > > & connectionsVector = graph[maxIndex];
+		const std::vector< std::pair< int, int > > & connectionsVector = networkGraph[maxIndex];
 		for (auto it = connectionsVector.cbegin(); it != connectionsVector.cend(); ++it)
 		{
 			if (knownComputers[(*it).first] == 0)
@@ -217,18 +222,19 @@ void Logic::generateResult25()
 {
 	int jStart;
 	int tStart;
-	int sumRooms;
 
 	vertexVector jGraph;
 	vertexVector tGraph;
 
-	generateResult25_Setup(sumRooms, jStart, tStart, jGraph, tGraph);
+	generateResult25_Setup(jStart, tStart, jGraph, tGraph);
 
-	generateResult25_Calculate(sumRooms, jStart, tStart, jGraph, tGraph);
+	generateResult25_Calculate(jStart, tStart, jGraph, tGraph);
 }
 
-void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph)
+void Logic::generateResult25_Setup(int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph)
 {
+	int sumRooms;
+
 	int fromRoom;
 	int toRoom;
 	bool isTRooms;
@@ -237,7 +243,7 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, vert
 	ExerciseIOHandler >> tStart;
 	ExerciseIOHandler >> jStart;
 
-	// Indexed from 1. We will not use 0. element.
+	// Indexed from 1. We will not use 0. index.
 	jGraph.resize(sumRooms + 1, std::vector< int >(0));
 	tGraph.resize(sumRooms + 1, std::vector< int >(0));
 
@@ -263,9 +269,10 @@ void Logic::generateResult25_Setup(int &sumRooms, int &jStart, int &tStart, vert
 	}
 }
 
-void Logic::generateResult25_Calculate(int &sumRooms, int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph)
+void Logic::generateResult25_Calculate(int &jStart, int &tStart, vertexVector &jGraph, vertexVector &tGraph)
 {
-	std::vector< int > roomCheckState(sumRooms + 1, 0);
+	// We will not use the 0. index.
+	std::vector< int > roomCheckState(jGraph.size(), 0);
 
 	// Where can we go from tStart in tGraph.
 	std::stack< int > needToCheck;
@@ -529,18 +536,17 @@ void Logic::generateResult52()
 
 	for (int i = 0; i < testDataCount; ++i)
 	{
-		int stageCount;
-
 		weightedEdgesVector stageGraph;
 
-		generateResult52_Setup(stageCount, stageGraph);
+		generateResult52_Setup(stageGraph);
 
-		generateResult52_Calculate(stageCount, stageGraph);
+		generateResult52_Calculate(stageGraph);
 	}
 }
 
-void Logic::generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGraph)
+void Logic::generateResult52_Setup(weightedEdgesVector &stageGraph)
 {
+	int stageCount;
 	int processCount;
 
 	ExerciseIOHandler >> stageCount;
@@ -562,116 +568,75 @@ void Logic::generateResult52_Setup(int &stageCount, weightedEdgesVector &stageGr
 	}
 }
 
-struct OrderBySecondPointerValue
+void Logic::generateResult52_Calculate(weightedEdgesVector &stageGraph)
 {
-	constexpr bool operator()(const std::pair< int, int* > &lhs, const std::pair< int, int* > &rhs) const
+	// We build it form 0 indexed stage, leaving out unconnected stages.
+	std::stack< int > topologicalOrderingOfStates;
+	std::stack< int > depthSearchStack;
+
+	// Indexed from 0.
+	std::vector< int > checkedStates(stageGraph.size(), 0);
+
+	depthSearchStack.push(0);
+
+	while (!(depthSearchStack.empty()))
 	{
-		return *(lhs.second) > *(rhs.second);
-	}
-};
+		int index = depthSearchStack.top();
 
-void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &stageGraph)
-{
-	std::stack< int > topologicalOrderingStates;
-	std::vector< int > checkedStates(stageCount, 0);
-
-	for (auto i = 1; i < checked.size(); ++i)
-		+ {
-		+if (!checked[i])
-			+ {
-			+deepIngressStack.push(i);
-			+
-				+while (!deepIngressStack.empty())
-				+ {
-				+int index = deepIngressStack.top();
-				+
-					+if (!checked[index])
-					+ {
-					+checked[index] = true;
-					+const std::vector< int > &minesChild = mines[index];
-					+for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
-						+ {
-						+if (!checked[(*it)])
-							+ {
-							+deepIngressStack.push(*it);
-							+}
-						+}
-					+}
-				+else
-					+ {
-					+int tmp = deepIngressStack.top();
-					+firstDeepIngressStackResult.push(tmp);
-					+deepIngressStack.pop();
-					+}
-				+}
-			+}
-		+}
-
-	std::vector< int > summedProcessTime(stageCount, 0);
-	std::vector< int > parentStageVector(stageCount, -1);
-
-	std::priority_queue< std::pair< int, int* >, std::vector< std::pair< int, int* > >, OrderBySecondPointerValue> activeStages;
-
-	activeStages.push(std::make_pair(0, &summedProcessTime[0]));
-
-	while (!(activeStages.empty()))
-	{
-		int index = activeStages.top().first;
-
-		activeStages.pop();
-
-		const std::vector< std::pair< int,int > > &nextStages = stageGraph[index];
-		for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
+		if (checkedStates[index] == 0)
 		{
-			if ((*it).first != index)
+			checkedStates[index] = 1;
+
+			const auto &nextStages = stageGraph[index];
+			for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
 			{
-				int newProcessTime = summedProcessTime[index] + (*it).second;
-				if (newProcessTime > summedProcessTime[(*it).first])
+				if (checkedStates[(*it).first] == 0)
 				{
-					int i = index;
-					bool notFound = true;
+					depthSearchStack.push((*it).first);
+				}
+			}
+		}
+		else
+		{
+			topologicalOrderingOfStates.push(depthSearchStack.top());
+			depthSearchStack.pop();
+		}
+	}
 
-					while (parentStageVector[i] != -1)
-					{
-						if (parentStageVector[i] == (*it).first)
-						{
-							notFound = false;
-							break;
-						}
+	// If the last stage was put into the topological stack.
+	if (checkedStates[stageGraph.size() - 1] != 0)
+	{
 
-						i = parentStageVector[i];
-					}
+		std::vector< int > summedProcessTime(stageGraph.size(), 0);
+		std::vector< int > parentStageVector(stageGraph.size(), -1);
 
-					if (notFound)
+		while (!(topologicalOrderingOfStates.empty()))
+		{
+			int index = topologicalOrderingOfStates.top();
+
+			topologicalOrderingOfStates.pop();
+
+			const auto &nextStages = stageGraph[index];
+			for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
+			{
+				// We ignore if it points to itself.
+				if ((*it).first != index)
+				{
+					int newProcessTime = summedProcessTime[index] + (*it).second;
+					if (summedProcessTime[(*it).first] < newProcessTime)
 					{
 						summedProcessTime[(*it).first] = newProcessTime;
 
-						if (activeStages.size() > 1)
-						{
-							make_heap(const_cast<std::pair< int, int* >*>(&activeStages.top()),
-								const_cast<std::pair< int, int* >*>(&activeStages.top()) + activeStages.size(),
-								OrderBySecondPointerValue());
-						}
-
-						activeStages.push(std::make_pair((*it).first, &summedProcessTime[(*it).first]));
 						parentStageVector[(*it).first] = index;
 					}
 				}
 			}
-		 }
-	}
+		}
 
-	if (parentStageVector[stageCount - 1] == -1)
-	{
-		ExerciseIOHandler << std::string("Hibas utemterv!");
-	}
-	else
-	{
-		int index = stageCount - 1;
+		int index = stageGraph.size() - 1;
 
 		ExerciseIOHandler << summedProcessTime[index];
 		ExerciseIOHandler << std::string(" ");
-
 
 		std::stack< int > stagesPath;
 		stagesPath.push(index);
@@ -686,41 +651,50 @@ void Logic::generateResult52_Calculate(int &stageCount, weightedEdgesVector &sta
 		{
 			ExerciseIOHandler << stagesPath.top();
 
-			if (stagesPath.top() != stageCount - 1)
+			if (stagesPath.top() != stageGraph.size() - 1)
 			{
 				ExerciseIOHandler << std::string(", ");
 			}
 
 			stagesPath.pop();
 		}
-		
+	}
+	else
+	{
+		ExerciseIOHandler << std::string("Hibas utemterv!");
 	}
 
 	ExerciseIOHandler << std::endl;
 }
-/*
+
 void Logic::generateResult70()
 {
 	int startPoint;
 	int endPoint;
 
-	Graph< int > tourGraph;
+	std::vector< int > parendtsCountOfPoints;
+	vertexVector pointsGraph;
 
-	generateResult70_Setup(startPoint, endPoint, tourGraph);
+	generateResult70_Setup(startPoint, parendtsCountOfPoints, pointsGraph);
 
-	generateResult70_Calculate(startPoint, tourGraph);
+	generateResult70_Calculate(startPoint, parendtsCountOfPoints, pointsGraph);
 }
 
-void Logic::generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > &tourGraph)
+void Logic::generateResult70_Setup(int &startPoint, std::vector< int > &parendtsCountOfPoints, vertexVector &pointsGraph)
 {
 	int pointsCount;
 	int pathsCount;
-	std::map< int, std::vector< int > > tourMap;
+
+	int endPoint;
 
 	ExerciseIOHandler >> pointsCount;
 	ExerciseIOHandler >> pathsCount;
 	ExerciseIOHandler >> startPoint;
 	ExerciseIOHandler >> endPoint;
+
+	// Points are indexed from 1. This graph is connected without any circle.
+	parendtsCountOfPoints.resize(pointsCount + 1, int(0));
+	pointsGraph.resize(pointsCount + 1, std::vector< int >(0));
 
 	for (int i = 0; i < pathsCount; ++i)
 	{
@@ -730,36 +704,72 @@ void Logic::generateResult70_Setup(int &startPoint, int &endPoint, Graph< int > 
 		ExerciseIOHandler >> fromPoint;
 		ExerciseIOHandler >> toPoint;
 
-		tourGraph.addEdge(fromPoint, toPoint);
+		++(parendtsCountOfPoints[toPoint]);
+		pointsGraph[fromPoint].push_back(toPoint);
 	}
 }
 
-void Logic::generateResult70_Calculate(int &startPoint, Graph< int > &tourGraph)
+void Logic::generateResult70_Calculate(int &startPoint, std::vector< int > &parendtsCountOfPoints, vertexVector &pointsGraph)
 {
-	tourGraph.deepIngress(startPoint);
+	// We build it form startPoint point.
+	std::stack< int > topologicalOrderingOfPoints;
+	std::stack< int > depthSearchStack;
 
-	size_t sumInOutPath = 0;
-	std::vector< int > citicalPoints;
+	std::vector< int > checkedStates(pointsGraph.size(), 0);
 
-	for (size_t i = tourGraph.topologicalSize() - 1; i < -1 ; --i)
+	depthSearchStack.push(startPoint);
+
+	while (!(depthSearchStack.empty()))
 	{
-		sumInOutPath -= tourGraph.getTopologicalVertexAt(i)->ParentVertexesVector.size();
+		int index = depthSearchStack.top();
+
+		if (checkedStates[index] == 0)
+		{
+			checkedStates[index] = 1;
+
+			const auto &nextStages = pointsGraph[index];
+			for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
+			{
+				if (checkedStates[(*it)] == 0)
+				{
+					depthSearchStack.push((*it));
+				}
+			}
+		}
+		else
+		{
+			topologicalOrderingOfPoints.push(depthSearchStack.top());
+			depthSearchStack.pop();
+		}
+	}
+
+	int sumInOutPath = 0;
+	std::vector< int > citicalPoints(0);
+
+	while (!(topologicalOrderingOfPoints.empty()))
+	{
+		int index = topologicalOrderingOfPoints.top();
+
+		sumInOutPath -= parendtsCountOfPoints[index];
 		if (sumInOutPath == 0)
 		{
-			citicalPoints.push_back(tourGraph.getTopologicalVertexAt(i)->Id);
+			citicalPoints.push_back(index);
 		}
-		sumInOutPath += tourGraph.getTopologicalVertexAt(i)->ChildVertexesVector.size();
+		sumInOutPath += pointsGraph[index].size();
+
+		topologicalOrderingOfPoints.pop();
 	}
 
 	ExerciseIOHandler << citicalPoints.size();
 	ExerciseIOHandler << std::endl;
+
 	for (auto it = citicalPoints.cbegin(); it != citicalPoints.cend(); ++it)
 	{
-		ExerciseIOHandler << *it;
+		ExerciseIOHandler << (*it);
 		ExerciseIOHandler << std::string(" ");
 	}
 }
-
+/*
 void Logic::generateResult77()
 {
 	int minesCount = 0;
