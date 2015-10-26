@@ -75,7 +75,7 @@ void Logic::generateResult(const std::string &exerciseNumberStr, const std::stri
 	case 77:
 		while (ExerciseIOHandler.openNext())
 		{
-			//generateResult77();
+			generateResult77();
 			ExerciseIOHandler.close();
 		}
 
@@ -667,6 +667,7 @@ void Logic::generateResult52_Calculate(weightedEdgesVector &stageGraph)
 	ExerciseIOHandler << std::endl;
 }
 
+
 void Logic::generateResult70()
 {
 	int startPoint;
@@ -792,6 +793,7 @@ void Logic::generateResult77_Setup(vertexVector &minesGraph, vertexVector &mines
 
 	// The mines are indexed from 1. We will not use 0. index.
 	minesGraph.resize(minesCount + 1, std::vector< int >(0));
+	minesReversedGraph.resize(minesCount + 1, std::vector< int >(0));
 
 	for (int i = 0; i < minesCount; ++i)
 	{
@@ -813,14 +815,15 @@ void Logic::generateResult77_Setup(vertexVector &minesGraph, vertexVector &mines
 
 void Logic::generateResult77_Calculate(vertexVector &minesGraph, vertexVector &minesReversedGraph)
 {
-	std::vector< bool > checked(minesGraph.size(), false);
+	std::vector< bool > checkedMines(minesGraph.size(), false);
 	std::stack< int > depthSearchStack;
 
 	std::stack< int > firstDepthSearchResult;
 
+	// We do not use the 0. index.
 	for (int i = 1; i < minesGraph.size(); ++i)
 	{
-		if (checked[i] == false)
+		if (checkedMines[i] == false)
 		{
 			depthSearchStack.push(i);
 
@@ -828,13 +831,13 @@ void Logic::generateResult77_Calculate(vertexVector &minesGraph, vertexVector &m
 			{
 				int index = depthSearchStack.top();
 
-				if (checked[index] == false)
+				if (checkedMines[index] == false)
 				{
-					checked[index] = true;
+					checkedMines[index] = true;
 					const std::vector< int > &minesChild = minesGraph[index];
 					for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
 					{
-						if (!checked[(*it)])
+						if (checkedMines[(*it)] == false)
 						{
 							depthSearchStack.push(*it);
 						}
@@ -849,58 +852,62 @@ void Logic::generateResult77_Calculate(vertexVector &minesGraph, vertexVector &m
 		}
 	}
 
-	checked.clear();
-	checked.resize(minesGraph.size() + 1, false);
+	// The depthSearchStack stack is empty.
 
-	while (!deepIngressStack.empty())
+	// Reset the checked vector.
+	for (auto it = checkedMines.begin(); it != checkedMines.end(); ++it)
 	{
-		deepIngressStack.pop();
+		(*it) = false;
 	}
 
-	std::vector< int > strongChildCounts(minesCount + 1, 0);
+	// We well not use 0. index.
+	std::vector< int > strongChildCounts(minesGraph.size(), 0);
 	int strongChildCount = 0;
 
-	while (!firstDeepIngressStackResult.empty())
+	while (!firstDepthSearchResult.empty())
 	{
-		int vertex = firstDeepIngressStackResult.top();
-		firstDeepIngressStackResult.pop();
-		if (strongChildCounts[vertex] == 0)
+		if (strongChildCounts[firstDepthSearchResult.top()] == 0)
 		{
 			++strongChildCount;
 
-			deepIngressStack.push(vertex);
+			depthSearchStack.push(firstDepthSearchResult.top());
 
-			while (!deepIngressStack.empty())
+			while (!depthSearchStack.empty())
 			{
-				int index = deepIngressStack.top();
+				int index = depthSearchStack.top();
 
-				if (!checked[index])
+				if (checkedMines[index] == false)
 				{
-					checked[index] = true;
+					checkedMines[index] = true;
+
 					strongChildCounts[index] = strongChildCount;
-					const std::vector< int > &minesChild = reversedMines[index];
+					const auto &minesChild = minesReversedGraph[index];
 					for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
 					{
 						if (strongChildCounts[(*it)] == 0)
 						{
-							deepIngressStack.push(*it);
+							depthSearchStack.push(*it);
 						}
 					}
 				}
 				else
 				{
-					deepIngressStack.pop();
+					depthSearchStack.pop();
 				}
 			}
 		}
+
+		firstDepthSearchResult.pop();
 	}
 
 	std::vector< int > resultVector(strongChildCount + 1, 0);
 
-	for (int i = 1; i < mines.size(); ++i)
+	// We do not use 0. index.
+	for (int i = 1; i < minesGraph.size(); ++i)
 	{
-		const std::vector< int > &minesChild = mines[i];
-		for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
+		const auto &minesChild = minesGraph[i];
+
+		for (auto it = minesChild.cbegin(); it != minesChild.cend(); ++it)
 		{
 			if (strongChildCounts[i] != strongChildCounts[(*it)])
 			{
@@ -911,6 +918,7 @@ void Logic::generateResult77_Calculate(vertexVector &minesGraph, vertexVector &m
 
 	int count = 0;
 
+	// We do not use the 0. index.
 	for (int i = 1; i < resultVector.size(); ++i)
 	{
 		if (resultVector[i] == 0)
