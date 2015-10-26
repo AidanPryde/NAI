@@ -575,7 +575,7 @@ void Logic::generateResult52_Calculate(weightedEdgesVector &stageGraph)
 	std::stack< int > depthSearchStack;
 
 	// Indexed from 0.
-	std::vector< int > checkedStates(stageGraph.size(), 0);
+	std::vector< bool > checkedStates(stageGraph.size(), false);
 
 	depthSearchStack.push(0);
 
@@ -583,14 +583,14 @@ void Logic::generateResult52_Calculate(weightedEdgesVector &stageGraph)
 	{
 		int index = depthSearchStack.top();
 
-		if (checkedStates[index] == 0)
+		if (checkedStates[index] == false)
 		{
-			checkedStates[index] = 1;
+			checkedStates[index] = true;
 
 			const auto &nextStages = stageGraph[index];
 			for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
 			{
-				if (checkedStates[(*it).first] == 0)
+				if (checkedStates[(*it).first] == false)
 				{
 					depthSearchStack.push((*it).first);
 				}
@@ -604,7 +604,7 @@ void Logic::generateResult52_Calculate(weightedEdgesVector &stageGraph)
 	}
 
 	// If the last stage was put into the topological stack.
-	if (checkedStates[stageGraph.size() - 1] != 0)
+	if (checkedStates[stageGraph.size() - 1] == true)
 	{
 
 		std::vector< int > summedProcessTime(stageGraph.size(), 0);
@@ -715,7 +715,7 @@ void Logic::generateResult70_Calculate(int &startPoint, std::vector< int > &pare
 	std::stack< int > topologicalOrderingOfPoints;
 	std::stack< int > depthSearchStack;
 
-	std::vector< int > checkedStates(pointsGraph.size(), 0);
+	std::vector< bool > checkedStates(pointsGraph.size(), false);
 
 	depthSearchStack.push(startPoint);
 
@@ -723,14 +723,14 @@ void Logic::generateResult70_Calculate(int &startPoint, std::vector< int > &pare
 	{
 		int index = depthSearchStack.top();
 
-		if (checkedStates[index] == 0)
+		if (checkedStates[index] == false)
 		{
-			checkedStates[index] = 1;
+			checkedStates[index] = true;
 
 			const auto &nextStages = pointsGraph[index];
 			for (auto it = nextStages.cbegin(); it != nextStages.cend(); ++it)
 			{
-				if (checkedStates[(*it)] == 0)
+				if (checkedStates[(*it)] == false)
 				{
 					depthSearchStack.push((*it));
 				}
@@ -743,6 +743,7 @@ void Logic::generateResult70_Calculate(int &startPoint, std::vector< int > &pare
 		}
 	}
 
+	// Checking the in and out going paths from a point to tell if it is a critical point.
 	int sumInOutPath = 0;
 	std::vector< int > citicalPoints(0);
 
@@ -769,23 +770,28 @@ void Logic::generateResult70_Calculate(int &startPoint, std::vector< int > &pare
 		ExerciseIOHandler << std::string(" ");
 	}
 }
-/*
+
+
 void Logic::generateResult77()
 {
 	int minesCount = 0;
 
-	std::map< int, std::vector< int > > mines;
-	std::map< int, std::vector< int > > reversedMines;
+	vertexVector minesGraph;
+	vertexVector minesReversedGraph;
 
-	generateResult77_Setup(minesCount, mines, reversedMines);
+	generateResult77_Setup(minesGraph, minesReversedGraph);
 
-	generateResult77_Calculate(minesCount, mines, reversedMines);
-
+	generateResult77_Calculate(minesGraph, minesReversedGraph);
 }
 
-void Logic::generateResult77_Setup(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines)
+void Logic::generateResult77_Setup(vertexVector &minesGraph, vertexVector &minesReversedGraph)
 {
+	int minesCount;
+
 	ExerciseIOHandler >> minesCount;
+
+	// The mines are indexed from 1. We will not use 0. index.
+	minesGraph.resize(minesCount + 1, std::vector< int >(0));
 
 	for (int i = 0; i < minesCount; ++i)
 	{
@@ -799,55 +805,52 @@ void Logic::generateResult77_Setup(int &minesCount, std::map< int, std::vector< 
 
 			ExerciseIOHandler >> connectedMine;
 
-			mines[i + 1].push_back(connectedMine);
-			reversedMines[connectedMine].push_back(i + 1);
+			minesGraph[i + 1].push_back(connectedMine);
+			minesReversedGraph[connectedMine].push_back(i + 1);
 		}
 	}
 }
 
-void Logic::generateResult77_Calculate(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines)
+void Logic::generateResult77_Calculate(vertexVector &minesGraph, vertexVector &minesReversedGraph)
 {
-	std::vector< bool > checked(minesCount + 1, false);
-	std::stack< int > deepIngressStack;
+	std::vector< bool > checked(minesGraph.size(), false);
+	std::stack< int > depthSearchStack;
 
-	std::stack< int > firstDeepIngressStackResult;
+	std::stack< int > firstDepthSearchResult;
 
-	
-
-	for (auto i = 1; i < checked.size(); ++i)
+	for (int i = 1; i < minesGraph.size(); ++i)
 	{
-		if (!checked[i])
+		if (checked[i] == false)
 		{
-			deepIngressStack.push(i);
+			depthSearchStack.push(i);
 
-			while (!deepIngressStack.empty())
+			while (!depthSearchStack.empty())
 			{
-				int index = deepIngressStack.top();
+				int index = depthSearchStack.top();
 
-				if (!checked[index])
+				if (checked[index] == false)
 				{
 					checked[index] = true;
-					const std::vector< int > &minesChild = mines[index];
+					const std::vector< int > &minesChild = minesGraph[index];
 					for (auto it = minesChild.begin(); it != minesChild.end(); ++it)
 					{
 						if (!checked[(*it)])
 						{
-							deepIngressStack.push(*it);
+							depthSearchStack.push(*it);
 						}
 					}
 				}
 				else
 				{
-					int tmp = deepIngressStack.top();
-					firstDeepIngressStackResult.push(tmp);
-					deepIngressStack.pop();
+					firstDepthSearchResult.push(depthSearchStack.top());
+					depthSearchStack.pop();
 				}
 			}
 		}
 	}
 
 	checked.clear();
-	checked.resize(minesCount + 1, false);
+	checked.resize(minesGraph.size() + 1, false);
 
 	while (!deepIngressStack.empty())
 	{
@@ -919,6 +922,7 @@ void Logic::generateResult77_Calculate(int &minesCount, std::map< int, std::vect
 	ExerciseIOHandler << count;
 }
 
+/*
 void Logic::generateResult78()
 {
 	int starmapSize;

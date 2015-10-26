@@ -204,6 +204,12 @@
     <Text Include="In-Outputs\70\Out\OUTPUT03.TXT" />
     <Text Include="In-Outputs\70\Out\OUTPUT04.TXT" />
     <Text Include="In-Outputs\70\Out\OUTPUT05.TXT" />
+    <Text Include="In-Outputs\77\In\INPUT01.TXT" />
+    <Text Include="In-Outputs\77\In\INPUT02.TXT" />
+    <Text Include="In-Outputs\77\In\INPUT03.TXT" />
+    <Text Include="In-Outputs\77\In\INPUT04.TXT" />
+    <Text Include="In-Outputs\77\In\INPUT05.TXT" />
+    <Text Include="In-Outputs\77\In\INPUT06.TXT" />
     <Text Include="In-Outputs\9\In\INPUT01.TXT" />
     <Text Include="In-Outputs\9\In\INPUT02.TXT" />
     <Text Include="In-Outputs\9\In\INPUT03.TXT" />

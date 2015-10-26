@@ -10,7 +10,7 @@
 #include <stack>
 
 typedef std::vector< std::vector< std::pair< int, int> > > weightedEdgesVector; // 09, 52
-typedef std::vector< std::vector< int > > vertexVector; // 25, 46, 70
+typedef std::vector< std::vector< int > > vertexVector; // 25, 46, 70, 77
 typedef std::map< std::string, int > idMap; // 46
 typedef std::vector< std::string > reversedIdVector; // 46
 
@@ -41,11 +41,11 @@ public:
 	void generateResult70();
 	void generateResult70_Setup(int &startPoint, std::vector< int > &parendtsCountOfPoints, vertexVector &pointsGraph);
 	void generateResult70_Calculate(int &startPoint, std::vector< int > &parendtsCountOfPoints, vertexVector &pointsGraph);
-	/*
+	
 	void generateResult77();
-	void generateResult77_Setup(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines);
-	void generateResult77_Calculate(int &minesCount, std::map< int, std::vector< int > > &mines, std::map< int, std::vector< int > > &reversedMines);
-
+	void generateResult77_Setup(vertexVector &minesGraph, vertexVector &minesReversedGraph);
+	void generateResult77_Calculate(vertexVector &minesGraph, vertexVector &minesReversedGraph);
+	/*
 	void generateResult78();
 	void generateResult78_Setup(int &starmapSize, std::vector < std::vector< int> > &starmap);
 	void generateResult78_Calculate(int &starmapSize, std::vector < std::vector< int> > &starmap);

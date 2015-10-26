@@ -279,5 +279,23 @@
     <Text Include="In-Outputs\70\Out\OUTPUT05.TXT">
       <Filter>Resource Files\In-Outputs\70\Out</Filter>
     </Text>
+    <Text Include="In-Outputs\77\In\INPUT01.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT02.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT03.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT04.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT05.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
+    <Text Include="In-Outputs\77\In\INPUT06.TXT">
+      <Filter>Resource Files\In-Outputs\77\In</Filter>
+    </Text>
   </ItemGroup>
 </Project>
