@@ -1,5 +1,5 @@
 # NAI-exercises
-The Significant Algorithm Solving course exercises at ELTE IK university in hungary.
+The Significant Algorithm Solving course exercises at ELTE IK university in Hungary.
 
 Solving exercises from old competations.
 
